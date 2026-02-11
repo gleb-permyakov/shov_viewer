@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+.inDev {
+    background-color: gray !important;
+    color: rgb(197, 197, 197);
+    cursor: wait !important;
+}
+
 body {
     /* width: 1000px; */
     font-family: Arial, sans-serif;
