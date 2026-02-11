@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотрщик с рисованием</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="interface.js" defer></script>
+    <script src="index.js" defer></script>
+</head>
+<body>
+    <div class="viewer">
+        <div class="tools">
+            <input type="file" id="fileInput" class="file-input" accept="image/*">
+            <label for="fileInput" class="file-label">Загрузить изображение</label>
+            
+            <button class="tool-btn active" data-tool="line">Линия</button>
+            <button class="tool-btn" data-tool="rectangle">Прямоугольник</button>
+            <button class="tool-btn" data-tool="ellipse">Эллипс</button>
+            <!-- <button class="tool-btn" data-tool="arrow">Стрелка</button> -->
+            <button class="tool-btn" data-tool="text">Текст</button>
+
+            
+            <input type="color" id="colorPicker" class="color-picker" value="#ff0000">
+            
+            <input type="range" id="sizeSlider" class="size-slider" min="1" max="20" value="3">
+            <span id="sizeValue">3px</span>
+            
+            <button class="tool-btn" id="deleteBtn">Удалить</button>
+            <button class="tool-btn" id="clearBtn">Очистить</button>
+            <button class="tool-btn" id="saveBtn">Сохранить</button>
+            
+            <div class="zoom-controls">
+                <button class="tool-btn" id="zoomIn">+</button>
+                <button class="tool-btn" id="zoomOut">-</button>
+                <button class="tool-btn" id="resetZoom">100%</button>
+            </div>
+        </div>
+        
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        
+        <div class="info">
+            <div id="status">Загрузите изображение или начните рисовать</div>
+        </div>
+    </div>
+</body>
+</html>
