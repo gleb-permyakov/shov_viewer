@@ -24,7 +24,7 @@ sizeSlider.addEventListener("change", () => {
 // Переменные для масштабирования
 let zoomLevel = 1;
 const ZOOM_STEP = 0.25;
-const MAX_ZOOM = 3;
+const MAX_ZOOM = 6;
 const MIN_ZOOM = 1;
 // Получаем элементы управления масштабом
 const zoomInBtn = document.getElementById('zoomIn');
@@ -77,3 +77,18 @@ resetZoomBtn.addEventListener('click', function() {
     zoomLevel = 1;
     applyZoom();
 });
+
+// Очистка канваса
+// Функция для очистки canvas
+function clearCanvas() {
+    ctx.fillStyle = 'white'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    lines = []
+    rects = []
+    ellipses = []
+}
+// очистка по кнопке
+document.querySelector('#clearBtn').addEventListener('click', function() {
+    clearCanvas()
+    ctx.drawImage(original_image, 0, 0)
+})

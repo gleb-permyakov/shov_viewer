@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Просмотрщик с рисованием</title>
-    <link rel="stylesheet" href="./style.css">
-    <script src="interface.js" defer></script>
-    <script src="index.js" defer></script>
+    <link rel="stylesheet" href="./style.css">    
 </head>
 <body>
     <div class="viewer">
@@ -17,6 +15,7 @@
             <button class="tool-btn active" data-tool="line">Линия</button>
             <button class="tool-btn" data-tool="rectangle">Прямоугольник</button>
             <button class="tool-btn" data-tool="ellipse">Эллипс</button>
+            <button class="tool-btn" data-tool="ellipse3">Эллипс 3</button>
             <button class="tool-btn inDev" data-tool="arrow">Стрелка</button>
             <button class="tool-btn inDev" data-tool="text">Текст</button>
             <button class="tool-btn inDev" data-tool="text">Линейка</button>
@@ -46,5 +45,16 @@
             <div id="status">Загрузите изображение или начните рисовать</div>
         </div>
     </div>
+
+    <!-- JS scripts -->
+    <script src="interface.js" defer></script>
+    <!-- JS figures -->
+    <script src="./figures/line.js" defer></script>
+    <script src="./figures/rectangle.js" defer></script>
+    <script src="./figures/ellipse.js" defer></script>
+    <script src="./figures/ellipse3.js" defer></script>
+    <!-- JS main -->
+    <script src="index.js" defer></script>
+    
 </body>
 </html>
