@@ -86,6 +86,7 @@ function clearCanvas() {
     lines = []
     rects = []
     ellipses = []
+    ellipses3 = []
 }
 // очистка по кнопке
 document.querySelector('#clearBtn').addEventListener('click', function() {
