@@ -1,20 +1,20 @@
-let lines = []
-let actual_line_data = [] // [цвет, толщина, x1, y1, x2, y2]
+let lines_et = []
+let actual_line_et_data = [] // [цвет, толщина, x1, y1, x2, y2]
 
 // старт отрисовки линии
-function drawLine(e) {
+function drawLineEt(e) {
     startX = e.offsetX / zoomLevel
     startY = e.offsetY / zoomLevel
 
-    actual_line_data = []
-    actual_line_data.push(colorPicker.value, sizeSlider.value)
-    actual_line_data.push(startX, startY)
+    actual_line_et_data = []
+    actual_line_et_data.push("purple", 3)
+    actual_line_et_data.push(startX, startY)
 
     ctx.moveTo(startX, startY)
 }
 // отрисовка всех предыдущих линий
-function drawAllLines() {
-    lines.forEach(line => {
+function drawAllLinesEt() {
+    lines_et.forEach(line => {
         ctx.beginPath()
         ctx.moveTo(line[2], line[3])
         ctx.lineTo(line[4], line[5])
@@ -25,17 +25,19 @@ function drawAllLines() {
     })
 }
 // рисование линии
-function drawingLine(e) {
+function drawingLineEt(e) {
     if (!isDrawing) {
         return
     }
+
+    lines_et = []
 
     const x = e.offsetX / zoomLevel
     const y = e.offsetY / zoomLevel
     
     // парамемтры рисования
-    ctx.strokeStyle = colorPicker.value
-    ctx.lineWidth = sizeSlider.value
+    ctx.strokeStyle = "purple"
+    ctx.lineWidth = 3
     ctx.lineCap = 'round'
     // рисование линии
     ctx.beginPath()
@@ -44,9 +46,9 @@ function drawingLine(e) {
     ctx.stroke()
 }
 // поиск точки на линии
-function findPointInLine(e) {
+function findPointInLineEt(e) {
     counter = 0
-    lines.forEach(line => {
+    lines_et.forEach(line => {
         const x = e.offsetX / zoomLevel
         const y = e.offsetY / zoomLevel
 
@@ -86,21 +88,34 @@ function findPointInLine(e) {
             // сказали, что мышь на элементе
             mouse_over_element = true
             // передаем массив без этой линии
-            lines_without_hovered_element = lines.slice(0, counter).concat(lines.slice(counter+1))
+            lines_et_without_hovered_element = lines_et.slice(0, counter).concat(lines_et.slice(counter+1))
         }
         counter++
     })
 }
 // завершение линии
-function lineEnd(e) {
+function lineEtEnd(e) {
     const endX = e.offsetX / zoomLevel
     const endY = e.offsetY / zoomLevel
-    actual_line_data.push(endX, endY)
-    
+    actual_line_et_data.push(endX, endY)
+    lines_et.push((actual_line_et_data))
+
     const dx = endX - startX;
     const dy = endY - startY;
     const length = Math.sqrt(dx * dx + dy * dy);
-    if (length >= 10) {
-        lines.push((actual_line_data))
-    } 
+    len_etalon = length
+    mmToPx(length)
+}
+// подсчет миллиметров в пикселях
+function mmToPx(length) {
+    const selectElement = document.getElementById('etalonValue');
+    let line_mm = 0
+    if (selectElement.value == 1) {
+        line_mm = 30
+    } else if (selectElement.value == 2) {
+        line_mm = 45
+    } else if (selectElement.value == 3) {
+        line_mm = 60
+    }
+    mmToPx_ratio = line_mm / length
 }

@@ -84,6 +84,8 @@ function clearCanvas() {
     ctx.fillStyle = 'white'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     lines = []
+    lines_et = []
+    rulers = []
     rects = []
     ellipses = []
     ellipses3 = []
@@ -92,4 +94,10 @@ function clearCanvas() {
 document.querySelector('#clearBtn').addEventListener('click', function() {
     clearCanvas()
     ctx.drawImage(original_image, 0, 0)
+})
+// обновляем mm to px
+selectorEtalon = document.getElementById('etalonValue');
+selectorEtalon.addEventListener("change", function() {
+    mmToPx(len_etalon)
+    continueDraw()
 })

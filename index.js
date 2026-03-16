@@ -7,11 +7,16 @@ const deleteBtn = document.querySelector('#deleteBtn')
 
 let original_image
 let isDrawing = false
+let len_etalon = 0
+let mmToPx_ratio = 0
 
 // для удаления элементов
 lines_without_hovered_element = []
+rulers_without_hovered_element = []
+lines_et_without_hovered_element = []
 rects_without_hovered_element = []
 ellipses_without_hovered_element = []
+ellipses3_without_hovered_element = []
 mouse_over_element = false
 
 // устанавливаем базовый размер canvas
@@ -82,7 +87,11 @@ function startDraw(e) {
     let tool = document.querySelector(".active").dataset.tool
     if (tool == "line") {
         drawLine(e)
-    } else if (tool == "rectangle") {
+    } else if (tool == "line_etalon") {
+        drawLineEt(e)
+    } else if (tool == "ruler") {
+        drawRuler(e)
+    }else if (tool == "rectangle") {
         drawRect(e)
     } else if (tool == "ellipse") {
         drawEllipse(e)
@@ -97,9 +106,14 @@ function deleteElement(e) {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             ctx.drawImage(original_image, 0, 0)
             lines = lines_without_hovered_element
+            rulers = rulers_without_hovered_element
+            // lines_et = lines_et_without_hovered_element
             rects = rects_without_hovered_element
             ellipses = ellipses_without_hovered_element
+            ellipses3 = ellipses3_without_hovered_element
             drawAllLines()
+            drawAllRulers()
+            // drawAllLinesEt()
             drawAllRects()
             drawAllEllipses()
             drawAllEllipses3()
@@ -107,6 +121,7 @@ function deleteElement(e) {
             setTimeout(() => {
                 console.log("TIMEOUT")
                 drawAllLines()
+                drawAllRulers()
                 drawAllRects()
                 drawAllEllipses()
                 drawAllEllipses3()
@@ -121,12 +136,17 @@ function continueDraw(e) {
     // надо, чтобы по дефолту мышь не перекрывала объекты и не было выбранных объектов
     mouse_over_element = false
     lines_without_hovered_element = lines
+    rulers_without_hovered_element = rulers
+    lines_et_without_hovered_element = lines
     rects_without_hovered_element = rects
     ellipses_without_hovered_element = ellipses
+    ellipses3_without_hovered_element = ellipses3
     // отрисовываем все время 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(original_image, 0, 0)
     drawAllLines()
+    drawAllRulers()
+    drawAllLinesEt()
     drawAllRects()
     drawAllEllipses()
     drawAllEllipses3()
@@ -134,6 +154,10 @@ function continueDraw(e) {
     let tool = document.querySelector(".active").dataset.tool
     if (tool == "line") {
         drawingLine(e)
+    } else if (tool == "ruler") {
+        drawingRuler(e)
+    } else if (tool == "line_etalon") {
+        drawingLineEt(e)
     } else if (tool == "rectangle") {
         drawingRect(e)
     } else if (tool == "ellipse") {
@@ -143,8 +167,11 @@ function continueDraw(e) {
 // поиск точки в фигурах
 function findPointInFigures(e) {
     findPointInLine(e)
+    findPointInRuler(e)
+    findPointInLineEt(e)
     findPointInRect(e)
     findPointInEllipse(e)
+    findPointInEllipse3(e)
 }
 // MOUSE_UP, MOUSE_OUT
 // конец отрисовки
@@ -153,6 +180,10 @@ function stopDraw(e) {
         let tool = document.querySelector(".active").dataset.tool
         if (tool == "line") {
             lineEnd(e)
+        } else if (tool == "ruler") {
+            rulerEnd(e)
+        } else if (tool == "line_etalon") {
+            lineEtEnd(e)
         } else if (tool == "rectangle") {
             rectEnd(e)
         } else if (tool == "ellipse") {
