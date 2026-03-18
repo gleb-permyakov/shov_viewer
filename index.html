@@ -12,11 +12,14 @@
             <div class="tools-back">
                 <input type="file" id="fileInput" class="file-input" accept="image/*">
                 <label for="fileInput" class="tool-btn">Загрузить изображение</label>
-                <select id="etalonValue">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                </select>
+                <div class="tool-panel">
+                    <label for="etalonValue" class="tool-label">Эталон:</label>
+                    <select id="etalonValue" class="tool-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
                 <button class="tool-btn" data-tool="line_etalon">Эталонная линия</button>
                 <button class="tool-btn active" data-tool="line">Линия</button>
                 <button class="tool-btn" data-tool="rectangle">Прямоугольник</button>

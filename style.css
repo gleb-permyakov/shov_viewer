@@ -89,6 +89,28 @@ body {
     background: rgba(92, 160, 255, 0.05);
 }
 
+.tool-panel {
+    color: #e0e0e0;
+    font-size: 14px;
+}
+
+.tool-select {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #3a3f4b;  /* как у кнопок */
+    border-radius: 6px;          /* как у кнопок */
+    background-color: #21262F;   /* темный фон панели */
+    color: #e0e0e0;              /* светлый текст */
+    cursor: pointer;
+    transition: 0.2s all;
+}
+
+.tool-select:focus {
+    outline: none;
+    border-color: #8cb5ee;
+    box-shadow: 0 0 0 2px rgba(92, 160, 255, 0.2);
+}
+
 .color-picker {
     background: transparent;
     width: 40px;
