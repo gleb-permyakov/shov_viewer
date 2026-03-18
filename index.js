@@ -7,6 +7,8 @@ const deleteBtn = document.querySelector('#deleteBtn')
 
 let original_image
 let isDrawing = false
+let len_etalon = 0
+let mmToPx_ratio = 1
 
 
 // для удаления элементов
@@ -127,7 +129,9 @@ function deleteElement(e) {
     if (mouse_over_element == true) {
         if (deleteBtn.classList.contains("active")) {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
-            ctx.drawImage(original_image, 0, 0)  
+            if (original_image) {
+                ctx.drawImage(original_image, 0, 0)
+            }  
             rects = rects_without_hovered_element
             ellipses = ellipses_without_hovered_element
             ellipses3 = ellipses3_without_hovered_element
@@ -159,9 +163,13 @@ function continueDraw(e) {
     
     // отрисовываем все время 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.drawImage(original_image, 0, 0)
+    if (original_image) {
+        ctx.drawImage(original_image, 0, 0)
+    }   
 
     drawAllLines()
+    drawAllLinesEt()
+    drawAllRulers()
     drawAllRects()
     drawAllEllipses()
     drawAllEllipses3()
@@ -174,6 +182,10 @@ function continueDraw(e) {
         drawingRect(e)
     } else if (tool == "ellipse") {
         drawingEllipse(e)
+    } else if (tool == "line_etalon") {
+        drawingLineEt(e)
+    } else if (tool == "ruler") {
+        drawingRuler(e)
     }
 }
 // поиск точки в фигурах
@@ -182,20 +194,28 @@ function findPointInFigures(e) {
     findPointInRect(e)
     findPointInEllipse(e)
     findPointInEllipse3(e)
+    findPointInRuler(e)
+    findPointInLineEt(e)
 }
 // MOUSE_UP, MOUSE_OUT
 // конец отрисовки
 function stopDraw(e) {
     if (isDrawing) {
         let tool = document.querySelector(".active").dataset.tool
+
         if (tool == "line") {
             lineEnd(e)
         } else if (tool == "rectangle") {
             rectEnd(e)
         } else if (tool == "ellipse") {
             ellipseEnd(e)
+        } else if (tool == "line_etalon") {
+            lineEtEnd(e)
+        } else if (tool == "ruler") {
+            rulerEnd(e)
         }
     }
+
     isDrawing = false
 }
 

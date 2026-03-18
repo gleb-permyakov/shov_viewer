@@ -89,11 +89,15 @@ function clearCanvas() {
     rects = []
     ellipses = []
     ellipses3 = []
+    lines_et = []
+    rulers = []
 }
 // очистка по кнопке
 document.querySelector('#clearBtn').addEventListener('click', function() {
     clearCanvas()
-    ctx.drawImage(original_image, 0, 0)
+    if (original_image) {
+        ctx.drawImage(original_image, 0, 0)
+    }
 })
 
 // ========== МАСШТАБИРОВАНИЕ КОЛЕСИКОМ С ЗУМОМ В КУРСОР ==========
@@ -218,3 +222,8 @@ resetZoomBtn.addEventListener('click', function() {
     document.getElementById('status').textContent = `Масштаб: 100%`;
 });
 
+selectorEtalon = document.getElementById('etalonValue');
+selectorEtalon.addEventListener("change", function() {
+    mmToPx(len_etalon)
+    continueDraw()
+})
