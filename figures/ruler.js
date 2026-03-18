@@ -52,6 +52,12 @@ function drawingRuler(e) {
     ctx.moveTo(startX, startY)
     ctx.lineTo(x, y)
     ctx.stroke()
+
+    const dx = x - startX;
+    const dy = y - startY;
+    const length = Math.sqrt(dx*dx + dy*dy) * mmToPx_ratio;
+
+    drawLengthText(startX, startY, x, y, length)
 }
 // поиск точки на линии
 function findPointInRuler(e) {
