@@ -5,8 +5,11 @@ let actual_ellipse3_data = [] // [цвет, толщина, xo, y0, x1, y1, x2, 
 
 // рисуем эллипс по 3 точкам
 function drawEllipse3(e) {
-    startX = e.offsetX / zoomLevel
-    startY = e.offsetY / zoomLevel
+    // startX = e.offsetX / zoomLevel
+    // startY = e.offsetY / zoomLevel
+    const coords = getCanvasCoords(e);
+    const startX = coords.x;
+    const startY = coords.y;
 
     if (ellipse3_status == 1) {
         actual_ellipse3_data = []

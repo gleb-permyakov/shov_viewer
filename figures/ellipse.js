@@ -4,8 +4,10 @@ let actual_ellipse_data = [] // [цвет, толщина, xo, y0, middleX, midd
 
 // старт отрисовки эллипса
 function drawEllipse(e) {
-    startX = e.offsetX / zoomLevel
-    startY = e.offsetY / zoomLevel
+    const coords = getCanvasCoords(e);
+    const startX = coords.x;
+    const startY = coords.y;
+    
 
     actual_ellipse_data = []
     actual_ellipse_data.push(colorPicker.value, sizeSlider.value)
@@ -27,8 +29,9 @@ function drawingEllipse(e) {
 
     actual_ellipse_data = actual_ellipse_data.slice(0,4)
 
-    const x = e.offsetX / zoomLevel
-    const y = e.offsetY / zoomLevel
+    const coords = getCanvasCoords(e);
+    const x = coords.x;
+    const y = coords.y;
 
     // параметры рисования
     ctx.strokeStyle = colorPicker.value
@@ -83,8 +86,9 @@ function drawAnyEllipse(ellipse) {
 function findPointInEllipse(e) {
     let counter = 0 
     ellipses.forEach(ellipse => {
-        const x = e.offsetX / zoomLevel
-        const y = e.offsetY / zoomLevel
+        const coords = getCanvasCoords(e);
+        const x = coords.x;
+        const y = coords.y;
 
         const h = ellipse[4]
         const k = ellipse[5]

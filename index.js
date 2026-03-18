@@ -8,15 +8,33 @@ const deleteBtn = document.querySelector('#deleteBtn')
 let original_image
 let isDrawing = false
 
+
 // для удаления элементов
 lines_without_hovered_element = []
 rects_without_hovered_element = []
+rulers_without_hovered_element = []
+lines_et_without_hovered_element = []
+ellipses3_without_hovered_element = []
 ellipses_without_hovered_element = []
 mouse_over_element = false
 
 // устанавливаем базовый размер canvas
 canvas.width = 800
 canvas.height = 500
+
+function getCanvasCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    
+    // Координаты мыши относительно canvas на экране
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    // Пересчитываем в координаты canvas с учетом масштаба
+    const canvasX = mouseX / zoomLevel;
+    const canvasY = mouseY / zoomLevel;
+    
+    return { x: canvasX, y: canvasY };
+}
 
 // Обработчик загрузки файла
 // Загрузка изображения
@@ -68,8 +86,18 @@ fileInput.addEventListener('change', function(e) {
     reader.readAsDataURL(file)
 })
 
-canvas.addEventListener("mousedown", startDraw)
-canvas.addEventListener("mousedown", deleteElement)
+canvas.addEventListener("mousedown", (e) => {
+    if (e.button === 2) { // правая кнопка - только панорамирование
+        return; // не запускаем рисование
+    }
+    
+    // левая кнопка - рисование
+    startDraw(e);
+    deleteElement(e);
+});
+
+// canvas.addEventListener("mousedown", startDraw)
+// canvas.addEventListener("mousedown", deleteElement)
 canvas.addEventListener("mousemove", continueDraw)
 canvas.addEventListener("mousemove", findPointInFigures)
 canvas.addEventListener("mouseout", stopDraw)
@@ -86,6 +114,10 @@ function startDraw(e) {
         drawRect(e)
     } else if (tool == "ellipse") {
         drawEllipse(e)
+    } else if (tool == "line_etalon") {
+        drawLineEt(e)
+    } else if (tool == "ruler") {
+        drawRuler(e)
     } else if (tool == "ellipse3") {
         drawEllipse3(e)
     }
@@ -95,10 +127,10 @@ function deleteElement(e) {
     if (mouse_over_element == true) {
         if (deleteBtn.classList.contains("active")) {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
-            ctx.drawImage(original_image, 0, 0)
-            lines = lines_without_hovered_element
+            ctx.drawImage(original_image, 0, 0)  
             rects = rects_without_hovered_element
             ellipses = ellipses_without_hovered_element
+            ellipses3 = ellipses3_without_hovered_element
             drawAllLines()
             drawAllRects()
             drawAllEllipses()
@@ -123,15 +155,19 @@ function continueDraw(e) {
     lines_without_hovered_element = lines
     rects_without_hovered_element = rects
     ellipses_without_hovered_element = ellipses
+    ellipses3_without_hovered_element = ellipses3
+    
     // отрисовываем все время 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(original_image, 0, 0)
+
     drawAllLines()
     drawAllRects()
     drawAllEllipses()
     drawAllEllipses3()
 
-    let tool = document.querySelector(".active").dataset.tool
+    // Рисуем текущую фигуру только если процесс рисования активен
+    let tool = document.querySelector(".active")?.dataset.tool
     if (tool == "line") {
         drawingLine(e)
     } else if (tool == "rectangle") {
@@ -145,6 +181,7 @@ function findPointInFigures(e) {
     findPointInLine(e)
     findPointInRect(e)
     findPointInEllipse(e)
+    findPointInEllipse3(e)
 }
 // MOUSE_UP, MOUSE_OUT
 // конец отрисовки
@@ -161,3 +198,4 @@ function stopDraw(e) {
     }
     isDrawing = false
 }
+

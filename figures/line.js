@@ -1,10 +1,13 @@
 let lines = []
 let actual_line_data = [] // [цвет, толщина, x1, y1, x2, y2]
 
+
+
 // старт отрисовки линии
 function drawLine(e) {
-    startX = e.offsetX / zoomLevel
-    startY = e.offsetY / zoomLevel
+    const coords = getCanvasCoords(e);
+    const startX = coords.x;
+    const startY = coords.y;
 
     actual_line_data = []
     actual_line_data.push(colorPicker.value, sizeSlider.value)
@@ -25,30 +28,63 @@ function drawAllLines() {
     })
 }
 // рисование линии
+// function drawingLine(e) {
+//     if (!isDrawing) {
+//         return
+//     }
+
+//     const coords = getCanvasCoords(e);
+//     const startX = coords.x;
+//     const startY = coords.y;
+    
+//     // парамемтры рисования
+//     ctx.strokeStyle = colorPicker.value
+//     ctx.lineWidth = sizeSlider.value
+//     ctx.lineCap = 'round'
+//     // рисование линии
+//     ctx.beginPath()
+//     ctx.moveTo(startX, startY)
+//     ctx.lineTo(x, y)
+//     ctx.stroke()
+// }
+
 function drawingLine(e) {
     if (!isDrawing) {
         return
     }
 
-    const x = e.offsetX / zoomLevel
-    const y = e.offsetY / zoomLevel
+    const coords = getCanvasCoords(e);
+    const x = coords.x;
+    const y = coords.y;
     
-    // парамемтры рисования
-    ctx.strokeStyle = colorPicker.value
-    ctx.lineWidth = sizeSlider.value
-    ctx.lineCap = 'round'
-    // рисование линии
-    ctx.beginPath()
-    ctx.moveTo(startX, startY)
-    ctx.lineTo(x, y)
-    ctx.stroke()
+    // Берем начальные координаты из actual_line_data
+    const startX = actual_line_data[2];
+    const startY = actual_line_data[3];
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(original_image, 0, 0);  // <--- может быть undefined
+    drawAllLines();
+    drawAllRects();
+    drawAllEllipses();
+    drawAllEllipses3();
+    
+    // Рисуем текущую линию
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(x, y);
+    ctx.strokeStyle = colorPicker.value;
+    ctx.lineWidth = sizeSlider.value;
+    ctx.lineCap = 'round';
+    ctx.stroke();
 }
+
 // поиск точки на линии
 function findPointInLine(e) {
     counter = 0
     lines.forEach(line => {
-        const x = e.offsetX / zoomLevel
-        const y = e.offsetY / zoomLevel
+        const coords = getCanvasCoords(e);
+        const x = coords.x;
+        const y = coords.y;
 
         k = ((line[3] - line[5]) / (line[2] - line[4]))
         b = line[3] - k * line[2]
@@ -93,8 +129,9 @@ function findPointInLine(e) {
 }
 // завершение линии
 function lineEnd(e) {
-    const endX = e.offsetX / zoomLevel
-    const endY = e.offsetY / zoomLevel
+    const coords = getCanvasCoords(e);
+    const endX = coords.x;
+    const endY = coords.y;
     actual_line_data.push(endX, endY)
     lines.push((actual_line_data))
 }
