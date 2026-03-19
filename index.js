@@ -18,6 +18,7 @@ rulers_without_hovered_element = []
 lines_et_without_hovered_element = []
 ellipses3_without_hovered_element = []
 ellipses_without_hovered_element = []
+measureRects_without_hovered_element = []
 mouse_over_element = false
 
 // устанавливаем базовый размер canvas
@@ -122,6 +123,8 @@ function startDraw(e) {
         drawRuler(e)
     } else if (tool == "ellipse3") {
         drawEllipse3(e)
+    } else if (tool == "measureRect") {
+        drawMeasureRect(e)
     }
 }
 // удалить элемент
@@ -132,13 +135,20 @@ function deleteElement(e) {
             if (original_image) {
                 ctx.drawImage(original_image, 0, 0)
             }  
+            lines = lines_without_hovered_element
             rects = rects_without_hovered_element
             ellipses = ellipses_without_hovered_element
             ellipses3 = ellipses3_without_hovered_element
+            measureRects = measureRects_without_hovered_element
+            rulers = rulers_without_hovered_element
+            lines_et = lines_et_without_hovered_element
             drawAllLines()
             drawAllRects()
             drawAllEllipses()
             drawAllEllipses3()
+            drawAllLinesEt()
+            drawAllMeasureRects()
+            drawAllRulers()
             // если вдруг что-то подзалагало, не отрисовалось - отрисовываем с задержкой
             setTimeout(() => {
                 console.log("TIMEOUT")
@@ -146,6 +156,9 @@ function deleteElement(e) {
                 drawAllRects()
                 drawAllEllipses()
                 drawAllEllipses3()
+                drawAllLinesEt()
+                drawAllMeasureRects()
+                drawAllRulers()
             }, 100)
         }
     }
@@ -160,6 +173,10 @@ function continueDraw(e) {
     rects_without_hovered_element = rects
     ellipses_without_hovered_element = ellipses
     ellipses3_without_hovered_element = ellipses3
+    measureRects_without_hovered_element = measureRects
+    rulers_without_hovered_element = rulers
+    lines_et_without_hovered_element = lines_et
+    
     
     // отрисовываем все время 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -173,6 +190,7 @@ function continueDraw(e) {
     drawAllRects()
     drawAllEllipses()
     drawAllEllipses3()
+    drawAllMeasureRects()
 
     // Рисуем текущую фигуру только если процесс рисования активен
     let tool = document.querySelector(".active")?.dataset.tool
@@ -186,6 +204,8 @@ function continueDraw(e) {
         drawingLineEt(e)
     } else if (tool == "ruler") {
         drawingRuler(e)
+    } else if (tool == "measureRect") {
+        drawingMeasureRect(e)
     }
 }
 // поиск точки в фигурах
@@ -196,6 +216,7 @@ function findPointInFigures(e) {
     findPointInEllipse3(e)
     findPointInRuler(e)
     findPointInLineEt(e)
+    findPointInMeasureRect(e)
 }
 // MOUSE_UP, MOUSE_OUT
 // конец отрисовки
@@ -213,6 +234,8 @@ function stopDraw(e) {
             lineEtEnd(e)
         } else if (tool == "ruler") {
             rulerEnd(e)
+        } else if (tool == "measureRect") {
+            measureRectEnd(e)
         }
     }
 

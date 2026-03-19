@@ -1,5 +1,6 @@
 let rulers = []
 let actual_ruler_data = [] // [цвет, толщина, x1, y1, x2, y2]
+let linewidth = 1
 
 // старт отрисовки линии
 function drawRuler(e) {
@@ -8,7 +9,7 @@ function drawRuler(e) {
     const startY = coords.y;
 
     actual_ruler_data = []
-    actual_ruler_data.push("yellow", 3)
+    actual_ruler_data.push("yellow", linewidth)
     actual_ruler_data.push(startX, startY)
 
     ctx.moveTo(startX, startY)
@@ -45,7 +46,7 @@ function drawingRuler(e) {
     
     // парамемтры рисования
     ctx.strokeStyle = "yellow"
-    ctx.lineWidth = 3
+    ctx.lineWidth = linewidth
     ctx.lineCap = 'round'
     // рисование линии
     ctx.beginPath()
@@ -60,52 +61,47 @@ function drawingRuler(e) {
     drawLengthText(startX, startY, x, y, length)
 }
 // поиск точки на линии
-function findPointInRuler(e) {
-    counter = 0
-    rulers.forEach(ruler => {
-        const coords = getCanvasCoords(e);
-        const x = coords.x;
-        const y = coords.y;
+// 
 
-        k = ((ruler[3] - ruler[5]) / (ruler[2] - ruler[4]))
-        b = ruler[3] - k * ruler[2]
+function findPointInRuler(e){
 
-        const left_to_right = ruler[2] < ruler[4] 
-        if (left_to_right) {
-            left_side = ruler[2]
-            right_side = ruler[4]
-        } else {
-            left_side = ruler[4]
-            right_side = ruler[2]
-        }
+    const coords = getCanvasCoords(e)
+    const x = coords.x
+    const y = coords.y
 
-        const bottom_to_top = ruler[3] < ruler[5] 
-        if (bottom_to_top) {
-            bottom_side = ruler[3]
-            top_side = ruler[5]
-        } else {
-            bottom_side = ruler[5]
-            top_side = ruler[3]
-        }
+    let counter = 0
 
-        const horizontal_ruler_condotion = (y >= k * x + b - 7) && (y <= k * x + b + 7) && x >= left_side && x <= right_side
-        const vertical_ruler_condition = (x >= (y-b)/k - 7) && (x <= (y-b)/k + 7) && y >= bottom_side && y <= top_side
+    rulers.forEach(ruler=>{
 
-        if (horizontal_ruler_condotion || vertical_ruler_condition) {
-            // оп - нашли, подсветили
+        const x1 = ruler[2]
+        const y1 = ruler[3]
+        const x2 = ruler[4]
+        const y2 = ruler[5]
+
+        const A = y2 - y1
+        const B = x1 - x2
+        const C = x2*y1 - x1*y2
+
+        const dist = Math.abs(A*x + B*y + C) / Math.sqrt(A*A + B*B)
+
+        if(dist < 6){
+
             ctx.beginPath()
-            ctx.moveTo(ruler[2], ruler[3])
-            ctx.lineTo(ruler[4], ruler[5])
+            ctx.moveTo(x1,y1)
+            ctx.lineTo(x2,y2)
             ctx.strokeStyle = "#fafafa"
             ctx.lineWidth = ruler[1]
-            ctx.lineCap = 'round'
             ctx.stroke()
-            // сказали, что мышь на элементе
+
             mouse_over_element = true
-            // передаем массив без этой линии
-            rulers_without_hovered_element = rulers.slice(0, counter).concat(rulers.slice(counter+1))
+
+            rulers_without_hovered_element =
+                rulers.slice(0,counter)
+                .concat(rulers.slice(counter+1))
         }
+
         counter++
+
     })
 }
 // завершение линии
@@ -132,7 +128,7 @@ function drawLengthText(x1, y1, x2, y2, length) {
     ctx.font = "14px Arial";
     ctx.fillStyle = "yellow";
     ctx.strokeStyle = "black";
-    ctx.lineWidth = 1;
+    ctx.lineWidth = linewidth;
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
     

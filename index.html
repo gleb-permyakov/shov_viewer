@@ -28,13 +28,14 @@
                 <button class="tool-btn inDev" data-tool="arrow">Стрелка</button>
                 <button class="tool-btn inDev" data-tool="text">Текст</button>
                 <button class="tool-btn" data-tool="ruler">Линейка</button>
+                <button class="tool-btn" data-tool="measureRect">Измерительный прямоугольник</button>
 
-                
-                <input type="color" id="colorPicker" class="color-picker" value="#ff0000">
-                
-                <input type="range" id="sizeSlider" class="size-slider" min="1" max="20" value="3">
-                <span id="sizeValue">3px</span>
-                
+                <div>
+                    <input type="color" id="colorPicker" class="color-picker" value="#ff0000">
+                    
+                    <input type="range" id="sizeSlider" class="size-slider" min="1" max="20" value="3">
+                    <span id="sizeValue">3px</span>
+                </div>
                 <button class="tool-btn" id="deleteBtn">Удалить</button>
                 <button class="tool-btn" id="clearBtn">Очистить</button>
                 <button class="tool-btn inDev" id="saveBtn">Сохранить</button>
@@ -57,6 +58,7 @@
     <!-- JS scripts -->
     <script src="interface.js" defer></script>
     <!-- JS figures -->
+     <script src="./figures/measureRect.js" defer></script>
     <script src="./figures/line.js" defer></script>
     <script src="./figures/ruler.js" defer></script>
     <script src="./figures/line_etalon.js" defer></script>

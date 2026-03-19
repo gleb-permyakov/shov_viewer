@@ -84,3 +84,53 @@ function drawAllEllipses3() {
     // затем временные точки
     points3.forEach(pt => drawPointMarker(pt.x, pt.y))
 }
+
+function findPointInEllipse3(e){
+
+    const coords = getCanvasCoords(e)
+    const x = coords.x
+    const y = coords.y
+
+    let counter = 0
+
+    ellipses3.forEach(el=>{
+
+        const cx = el[2]
+        const cy = el[3]
+        const a = el[4]
+        const b = el[5]
+        const angle = el[6]
+
+        // поворачиваем координаты обратно
+        const cos = Math.cos(-angle)
+        const sin = Math.sin(-angle)
+
+        const dx = x - cx
+        const dy = y - cy
+
+        const xr = dx*cos - dy*sin
+        const yr = dx*sin + dy*cos
+
+        const value =
+            (xr*xr)/(a*a) +
+            (yr*yr)/(b*b)
+
+        if(value > 0.9 && value < 1.1){
+
+            ctx.beginPath()
+            ctx.ellipse(cx, cy, a, b, angle, 0, Math.PI*2)
+            ctx.strokeStyle = "#fafafa"
+            ctx.lineWidth = el[1]
+            ctx.stroke()
+
+            mouse_over_element = true
+
+            ellipses3_without_hovered_element =
+                ellipses3.slice(0,counter)
+                .concat(ellipses3.slice(counter+1))
+        }
+
+        counter++
+
+    })
+}

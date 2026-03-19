@@ -60,13 +60,6 @@ function drawingLine(e) {
     // Берем начальные координаты из actual_line_data
     const startX = actual_line_data[2];
     const startY = actual_line_data[3];
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(original_image, 0, 0);  // <--- может быть undefined
-    drawAllLines();
-    drawAllRects();
-    drawAllEllipses();
-    drawAllEllipses3();
     
     // Рисуем текущую линию
     ctx.beginPath();
