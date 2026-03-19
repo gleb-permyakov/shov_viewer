@@ -79,15 +79,15 @@ function drawEllipseDimensions(x1, y1, x2, y2) {
     ctx.textBaseline = "bottom"
 
     // ширина сверху
-    ctx.strokeText(width.toFixed(2) + " мм", (x1 + x2)/2, Math.min(y1, y2) - 5)
-    ctx.fillText(width.toFixed(2) + " мм", (x1 + x2)/2, Math.min(y1, y2) - 5)
+    ctx.strokeText(width.toFixed(2) + " мм", (x1 + x2)/2, Math.min(y1, y2) - 20)
+    ctx.fillText(width.toFixed(2) + " мм", (x1 + x2)/2, Math.min(y1, y2) - 20)
 
     // высота слева
     ctx.save()
     ctx.translate(Math.min(x1, x2) - 5, (y1 + y2)/2)
     ctx.rotate(-Math.PI / 2)
-    ctx.strokeText(height.toFixed(2) + " мм", 0, 0)
-    ctx.fillText(height.toFixed(2) + " мм", 0, 0)
+    ctx.strokeText(height.toFixed(2) + " мм", 0, 0 - 10)
+    ctx.fillText(height.toFixed(2) + " мм", 0, 0 - 10)
     ctx.restore()
 }
 
