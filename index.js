@@ -19,6 +19,8 @@ lines_et_without_hovered_element = []
 ellipses3_without_hovered_element = []
 ellipses_without_hovered_element = []
 measureRects_without_hovered_element = []
+measureEllipses_without_hovered_element = []
+measureEllipses3_without_hovered_element = []
 mouse_over_element = false
 
 // устанавливаем базовый размер canvas
@@ -125,6 +127,10 @@ function startDraw(e) {
         drawEllipse3(e)
     } else if (tool == "measureRect") {
         drawMeasureRect(e)
+    } else if (tool == "measureEllipse") {
+        drawMeasureEllipse(e)
+    } else if (tool == "measureEllipse3") {
+        drawMeasureEllipse3(e)
     }
 }
 // удалить элемент
@@ -142,11 +148,15 @@ function deleteElement(e) {
             measureRects = measureRects_without_hovered_element
             rulers = rulers_without_hovered_element
             lines_et = lines_et_without_hovered_element
+            measureEllipses = measureEllipses_without_hovered_element
+            measureEllipses3 = measureEllipses3_without_hovered_element
             drawAllLines()
             drawAllRects()
             drawAllEllipses()
             drawAllEllipses3()
             drawAllLinesEt()
+            drawAllMeasureEllipses()
+            drawAllMeasureEllipses3()
             drawAllMeasureRects()
             drawAllRulers()
             // если вдруг что-то подзалагало, не отрисовалось - отрисовываем с задержкой
@@ -157,6 +167,8 @@ function deleteElement(e) {
                 drawAllEllipses()
                 drawAllEllipses3()
                 drawAllLinesEt()
+                drawAllMeasureEllipses()
+                drawAllMeasureEllipses3()
                 drawAllMeasureRects()
                 drawAllRulers()
             }, 100)
@@ -174,6 +186,8 @@ function continueDraw(e) {
     ellipses_without_hovered_element = ellipses
     ellipses3_without_hovered_element = ellipses3
     measureRects_without_hovered_element = measureRects
+    measureEllipses_without_hovered_element = measureEllipses
+    measureEllipses3_without_hovered_element = measureEllipses3
     rulers_without_hovered_element = rulers
     lines_et_without_hovered_element = lines_et
     
@@ -187,9 +201,11 @@ function continueDraw(e) {
     drawAllLines()
     drawAllLinesEt()
     drawAllRulers()
+    drawAllMeasureEllipses()
     drawAllRects()
     drawAllEllipses()
     drawAllEllipses3()
+    drawAllMeasureEllipses3()
     drawAllMeasureRects()
 
     // Рисуем текущую фигуру только если процесс рисования активен
@@ -206,6 +222,8 @@ function continueDraw(e) {
         drawingRuler(e)
     } else if (tool == "measureRect") {
         drawingMeasureRect(e)
+    } else if (tool == "measureEllipse") {
+        drawingMeasureEllipse(e)
     }
 }
 // поиск точки в фигурах
@@ -217,6 +235,8 @@ function findPointInFigures(e) {
     findPointInRuler(e)
     findPointInLineEt(e)
     findPointInMeasureRect(e)
+    findPointInMeasureEllipse(e)
+    findPointInMeasureEllipse3()
 }
 // MOUSE_UP, MOUSE_OUT
 // конец отрисовки
@@ -236,6 +256,8 @@ function stopDraw(e) {
             rulerEnd(e)
         } else if (tool == "measureRect") {
             measureRectEnd(e)
+        } else if (tool == "measureEllipse") {
+            measureEllipseEnd(e)
         }
     }
 

@@ -92,6 +92,7 @@ function clearCanvas() {
     lines_et = []
     rulers = []
     measureRects = []
+    measureEllipses = []
 }
 // очистка по кнопке
 document.querySelector('#clearBtn').addEventListener('click', function() {
