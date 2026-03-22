@@ -23,6 +23,13 @@ measureEllipses_without_hovered_element = []
 measureEllipses3_without_hovered_element = []
 mouse_over_element = false
 
+// задаем параметры для работы со швом
+mouse_down = false
+moving_shov_angle = false
+moving_shov_vertical = false
+mouse_x = 0
+mouse_y = 0
+
 // устанавливаем базовый размер canvas
 canvas.width = 800
 canvas.height = 500
@@ -99,12 +106,19 @@ canvas.addEventListener("mousedown", (e) => {
     // левая кнопка - рисование
     startDraw(e);
     deleteElement(e);
+
+    // для управления швом
+    mouse_down = true
+    coords = getCanvasCoords(e)
+    mouse_x = coords.x
+    mouse_y = coords.y
 });
 
 // canvas.addEventListener("mousedown", startDraw)
 // canvas.addEventListener("mousedown", deleteElement)
 canvas.addEventListener("mousemove", continueDraw)
 canvas.addEventListener("mousemove", findPointInFigures)
+canvas.addEventListener("mousemove", move_shov)
 canvas.addEventListener("mouseout", stopDraw)
 canvas.addEventListener("mouseup", stopDraw)
 
@@ -240,7 +254,60 @@ function findPointInFigures(e) {
     findPointInLineEt(e)
     findPointInMeasureRect(e)
     findPointInMeasureEllipse(e)
-    findPointInMeasureEllipse3()
+    findPointInMeasureEllipse3(e)
+    findPointInShov(e)
+}
+// двигать угол шва
+function move_shov(e) {
+    side_of_shov = findPointInShov(e)
+    const coords = getCanvasCoords(e)
+    const x = coords.x;
+    const y = coords.y;
+    if ((mouse_down && side_of_shov == 1) || moving_shov_angle) { // трогали правую часть -> меняем угол
+        moving_shov_angle = true // явно обозначаем, что занимаемся передвижением шва
+        if (y < mouse_y) { // значит тянем мышью вверх
+            shov_lines[0][3] += 2
+            shov_lines[0][5] -= 2
+
+            shov_lines[1][3] += 2
+            shov_lines[1][5] -= 2
+
+            shov_lines[2][3] += 2
+            shov_lines[2][5] -= 2
+        } else if (y > mouse_y) { // значит тянем мышью вниз
+            shov_lines[0][3] -= 2
+            shov_lines[0][5] += 2
+
+            shov_lines[1][3] -= 2
+            shov_lines[1][5] += 2
+
+            shov_lines[2][3] -= 2
+            shov_lines[2][5] += 2
+        }
+    } else if ((mouse_down && side_of_shov == 2) || moving_shov_vertical) { // трогали левую часть -> меняем вертикальное положение шва
+        moving_shov_vertical = true // явно обозначаем, что занимаемся передвижением шва
+        if (y < mouse_y) { // значит тянем мышью вверх
+            shov_lines[0][3] -= 1
+            shov_lines[0][5] -= 1
+
+            shov_lines[1][3] -= 1
+            shov_lines[1][5] -= 1
+
+            shov_lines[2][3] -= 1
+            shov_lines[2][5] -= 1
+        } else if (y > mouse_y) { // значит тянем мышью вниз
+            shov_lines[0][3] += 1
+            shov_lines[0][5] += 1
+
+            shov_lines[1][3] += 1
+            shov_lines[1][5] += 1
+
+            shov_lines[2][3] += 1
+            shov_lines[2][5] += 1
+        }
+    }
+    mouse_x = x
+    mouse_y = y
 }
 // MOUSE_UP, MOUSE_OUT
 // конец отрисовки
@@ -266,5 +333,10 @@ function stopDraw(e) {
     }
 
     isDrawing = false
+
+    // если двигали шов, то больше не двигаем
+    mouse_down = false
+    moving_shov_angle = false
+    moving_shov_vertical = false
 }
 
