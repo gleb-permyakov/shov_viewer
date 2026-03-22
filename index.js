@@ -150,6 +150,9 @@ function deleteElement(e) {
             lines_et = lines_et_without_hovered_element
             measureEllipses = measureEllipses_without_hovered_element
             measureEllipses3 = measureEllipses3_without_hovered_element
+            // отрисовка шва
+            drawAllShovLines()
+            // остальные элементы
             drawAllLines()
             drawAllRects()
             drawAllEllipses()
@@ -198,6 +201,7 @@ function continueDraw(e) {
         ctx.drawImage(original_image, 0, 0)
     }   
 
+    drawAllShovLines()
     drawAllLines()
     drawAllLinesEt()
     drawAllRulers()
@@ -207,7 +211,7 @@ function continueDraw(e) {
     drawAllEllipses3()
     drawAllMeasureEllipses3()
     drawAllMeasureRects()
-
+    
     // Рисуем текущую фигуру только если процесс рисования активен
     let tool = document.querySelector(".active")?.dataset.tool
     if (tool == "line") {

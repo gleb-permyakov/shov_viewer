@@ -16,23 +16,40 @@ function save_img_to_server() {
             if (data.status === 'success' && data.coordinates) {
                 const [y1_middle, y2_middle, y1_top, y2_top, y1_bottom, y2_bottom, width, height] = data.coordinates;
                 
+                // удаляем старые линии шва, если есть
+                shov_lines = []
                 // Добавляем три новые линии
-                lines.push(['#0000ff', 2, 0, y1_middle, width, y2_middle]);
-                
-                // Перерисовываем всё
-                // ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // if (original_image) ctx.drawImage(original_image, 0, 0);
-                // drawAllLines();
-                // drawAllRects();
-                // drawAllEllipses();
-                // drawAllEllipses3();
-                // drawAllLinesEt();
-                // drawAllMeasureEllipses();
-                // drawAllMeasureEllipses3();
-                // drawAllMeasureRects();
-                // drawAllRulers();
+                shov_lines.push(['#00008f', 2, 0, y1_middle, width, y2_middle]);
+                shov_lines.push(['#00008f', 2, 0, y1_top, width, y2_top]);
+                shov_lines.push(['#00008f', 2, 0, y1_bottom, width, y2_bottom]);
+                // рисуем шов
+                drawAllShovLines()
             }
         })
         .catch(error => console.error('Ошибка:', error));
     });
 }
+
+const delete_shov = document.querySelector(".delete_shov")
+delete_shov.addEventListener("click", () => {
+    func_delete_shov()
+})
+
+function func_delete_shov() {
+    shov_lines = []
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    if (original_image) {
+        ctx.drawImage(original_image, 0, 0)
+    }   
+
+    drawAllLines()
+    drawAllLinesEt()
+    drawAllRulers()
+    drawAllMeasureEllipses()
+    drawAllRects()
+    drawAllEllipses()
+    drawAllEllipses3()
+    drawAllMeasureEllipses3()
+    drawAllMeasureRects()
+    drawAllShovLines()
+}   
