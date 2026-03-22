@@ -27,6 +27,7 @@ mouse_over_element = false
 mouse_down = false
 moving_shov_angle = false
 moving_shov_vertical = false
+moving_shov_width = false
 mouse_x = 0
 mouse_y = 0
 
@@ -119,6 +120,8 @@ canvas.addEventListener("mousedown", (e) => {
 canvas.addEventListener("mousemove", continueDraw)
 canvas.addEventListener("mousemove", findPointInFigures)
 canvas.addEventListener("mousemove", move_shov)
+canvas.addEventListener("mousemove", move_shov_width)
+canvas.addEventListener("mousemove", update_mouse_coords) // обязательно в конце после всех других обработчиков мувов
 canvas.addEventListener("mouseout", stopDraw)
 canvas.addEventListener("mouseup", stopDraw)
 
@@ -255,60 +258,93 @@ function findPointInFigures(e) {
     findPointInMeasureRect(e)
     findPointInMeasureEllipse(e)
     findPointInMeasureEllipse3(e)
-    findPointInShov(e)
+    findPointInShovMiddle(e)
+    findPointInShovBottom(e)
 }
 // двигать угол шва
 function move_shov(e) {
-    side_of_shov = findPointInShov(e)
+    side_of_shov = findPointInShovMiddle(e)
     const coords = getCanvasCoords(e)
     const x = coords.x;
     const y = coords.y;
-    if ((mouse_down && side_of_shov == 1) || moving_shov_angle) { // трогали правую часть -> меняем угол
+    if (((mouse_down && side_of_shov == 1) || moving_shov_angle) && !moving_shov_width) { // трогали правую часть -> меняем угол
         moving_shov_angle = true // явно обозначаем, что занимаемся передвижением шва
         if (y < mouse_y) { // значит тянем мышью вверх
-            shov_lines[0][3] += 2
-            shov_lines[0][5] -= 2
+            shov_lines[0][3] += mouse_y - y
+            shov_lines[0][5] -= mouse_y - y
 
-            shov_lines[1][3] += 2
-            shov_lines[1][5] -= 2
+            shov_lines[1][3] += mouse_y - y
+            shov_lines[1][5] -= mouse_y - y
 
-            shov_lines[2][3] += 2
-            shov_lines[2][5] -= 2
+            shov_lines[2][3] += mouse_y - y
+            shov_lines[2][5] -= mouse_y - y
         } else if (y > mouse_y) { // значит тянем мышью вниз
-            shov_lines[0][3] -= 2
-            shov_lines[0][5] += 2
+            shov_lines[0][3] -= y - mouse_y
+            shov_lines[0][5] += y - mouse_y
 
-            shov_lines[1][3] -= 2
-            shov_lines[1][5] += 2
+            shov_lines[1][3] -= y - mouse_y
+            shov_lines[1][5] += y - mouse_y
 
-            shov_lines[2][3] -= 2
-            shov_lines[2][5] += 2
+            shov_lines[2][3] -= y - mouse_y
+            shov_lines[2][5] += y - mouse_y
         }
-    } else if ((mouse_down && side_of_shov == 2) || moving_shov_vertical) { // трогали левую часть -> меняем вертикальное положение шва
+    } else if (((mouse_down && side_of_shov == 2) || moving_shov_vertical) && !moving_shov_width) { // трогали левую часть -> меняем вертикальное положение шва
         moving_shov_vertical = true // явно обозначаем, что занимаемся передвижением шва
         if (y < mouse_y) { // значит тянем мышью вверх
-            shov_lines[0][3] -= 1
-            shov_lines[0][5] -= 1
+            shov_lines[0][3] -= mouse_y - y
+            shov_lines[0][5] -= mouse_y - y
 
-            shov_lines[1][3] -= 1
-            shov_lines[1][5] -= 1
+            shov_lines[1][3] -= mouse_y - y
+            shov_lines[1][5] -= mouse_y - y
 
-            shov_lines[2][3] -= 1
-            shov_lines[2][5] -= 1
+            shov_lines[2][3] -= mouse_y - y
+            shov_lines[2][5] -= mouse_y - y
         } else if (y > mouse_y) { // значит тянем мышью вниз
-            shov_lines[0][3] += 1
-            shov_lines[0][5] += 1
+            shov_lines[0][3] += y - mouse_y
+            shov_lines[0][5] += y - mouse_y
 
-            shov_lines[1][3] += 1
-            shov_lines[1][5] += 1
+            shov_lines[1][3] += y - mouse_y
+            shov_lines[1][5] += y - mouse_y
 
-            shov_lines[2][3] += 1
-            shov_lines[2][5] += 1
+            shov_lines[2][3] += y - mouse_y
+            shov_lines[2][5] += y - mouse_y
         }
     }
+}
+
+// двигать шов по вертикали
+function move_shov_width(e) {
+    mouse_over_bottom = findPointInShovBottom(e)
+    const coords = getCanvasCoords(e)
+    const x = coords.x
+    const y = coords.y
+    if (((mouse_down == true && mouse_over_bottom == 1) || moving_shov_width) && !moving_shov_vertical && !moving_shov_angle) {
+        moving_shov_width = true
+        if (y < mouse_y) { // значит тянем мышью вверх
+            shov_lines[1][3] += mouse_y - y
+            shov_lines[1][5] += mouse_y - y
+
+            shov_lines[2][3] -= mouse_y - y
+            shov_lines[2][5] -= mouse_y - y
+        } else if (y > mouse_y) { // значит тянем мышью вниз
+            shov_lines[1][3] -= y - mouse_y
+            shov_lines[1][5] -= y - mouse_y
+
+            shov_lines[2][3] += y - mouse_y
+            shov_lines[2][5] += y - mouse_y
+        }
+    }
+}
+
+// обновлять координаты мыши
+function update_mouse_coords(e) {
+    const coords = getCanvasCoords(e)
+    const x = coords.x
+    const y = coords.y
     mouse_x = x
     mouse_y = y
 }
+
 // MOUSE_UP, MOUSE_OUT
 // конец отрисовки
 function stopDraw(e) {
@@ -338,5 +374,6 @@ function stopDraw(e) {
     mouse_down = false
     moving_shov_angle = false
     moving_shov_vertical = false
+    moving_shov_width = false
 }
 
