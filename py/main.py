@@ -169,8 +169,24 @@ class SimpleHandler(BaseHTTPRequestHandler):
         if parsed_path.path == '/find_shov':
             # Обработка загрузки изображения для поиска шва
             self.handle_image_upload()
+        elif parsed_path.path == '/save_annotation':
+            # нужно сохранить аннотации снимка
+            # # Читаем данные
+            length = int(self.headers['Content-Length'])
+            data = json.loads(self.rfile.read(length))
+            
+            # Сохраняем в файл
+            with open('annotations/data.json', 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            
+            # Отправляем ответ
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({"status": "ok"}).encode())
         else:
             self.send_error(404, "Not Found")
+    
     
     def handle_image_upload(self):
         """Обработка загрузки изображения для поиска шва"""
