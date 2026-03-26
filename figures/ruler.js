@@ -78,11 +78,21 @@ function findPointInRuler(e){
         const x2 = ruler[4]
         const y2 = ruler[5]
 
-        const A = y2 - y1
-        const B = x1 - x2
-        const C = x2*y1 - x1*y2
+        const dx = x2 - x1
+        const dy = y2 - y1
 
-        const dist = Math.abs(A*x + B*y + C) / Math.sqrt(A*A + B*B)
+        const length2 = dx*dx + dy*dy
+
+        let t = ((x-x1)*dx + (y-y1)*dy) / length2
+        t = Math.max(0, Math.min(1, t))
+
+        const projX = x1 + t*dx
+        const projY = y1 + t*dy
+
+        const distX = x - projX
+        const distY = y - projY
+
+        const dist = Math.sqrt(distX*distX + distY*distY)
 
         if(dist < 6){
 
