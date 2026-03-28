@@ -241,82 +241,47 @@ selectorEtalon.addEventListener("change", function() {
 
 const dropdowns = document.querySelectorAll('.dropdown');
 
-// Для хранения глобально выбранного инструмента
-window.currentTool = window.currentTool || null;
-
 dropdowns.forEach(dropdown => {
-    const btn = dropdown.querySelector('.dropdown-btn');
-    const items = dropdown.querySelectorAll('.dropdown-item');
+  const btn = dropdown.querySelector('.dropdown-btn');
+  const content = dropdown.querySelector('.dropdown-content');
 
-    // исходный текст кнопки
-    const defaultText = btn.textContent;
-
-    // открыть/закрыть dropdown
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // закрываем все остальные dropdown
-        dropdowns.forEach(d => {
-            if (d !== dropdown) {
-                d.classList.remove('open');
-                d.reset();
-            }
-        });
-        dropdown.classList.toggle('open');
+  btn.addEventListener('click', () => {
+    // Закрыть все остальные dropdowns
+    dropdowns.forEach(d => {
+      if(d !== dropdown) d.classList.remove('open');
     });
 
-    // выбор элемента внутри dropdown
-    items.forEach(item => {
-        item.addEventListener('click', () => {
-            // сохраняем выбранный инструмент
-            window.currentTool = item.dataset.tool;
+    dropdown.classList.toggle('open');
+  });
 
-            // подсветка выбранного элемента
-            items.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
+  // Клик по элементу
+  content.querySelectorAll('.dropdown-item').forEach(item => {
+  item.addEventListener('click', () => {
+    // Подсветка выбранного внутри dropdown
+    content.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
 
-            // подсветка кнопки dropdown
-            document.querySelectorAll('.dropdown-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    // Меняем текст кнопки
+    btn.textContent = item.textContent + ' ↓';
 
-            // обновление текста кнопки
-            btn.textContent = item.textContent + " ↓";
+    // Закрываем dropdown
+    dropdown.classList.remove('open');
 
-            // закрываем dropdown
-            dropdown.classList.remove('open');
+    // !!! Обновляем глобальный текущий инструмент
+    currentTool = item.dataset.tool;
 
-            // снимаем подсветку с обычных кнопок вне dropdown
-            document.querySelectorAll('.tool-btn').forEach(b => {
-                if (!b.classList.contains('dropdown-btn')) b.classList.remove('active');
-            });
-        });
-    });
+    // Подсветка обычных кнопок: убираем active со всех
+    tools.forEach(tool => tool.classList.remove('active'));
 
-    // функция сброса dropdown к исходному состоянию
-    dropdown.reset = function() {
-        btn.textContent = defaultText;
-        btn.classList.remove('active');
-        items.forEach(i => i.classList.remove('active'));
-    };
+    // Если нужно, обновляем статус
+    document.getElementById('status').textContent = `Выбран инструмент: ${item.textContent}`;
+  });
+});
 });
 
-// закрытие всех dropdown при клике вне
-document.addEventListener('click', () => {
-    dropdowns.forEach(dropdown => dropdown.classList.remove('open'));
-});
-
-// подсветка обычных кнопок вне dropdown
-document.querySelectorAll('.tool-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        if (btn.classList.contains('dropdown-btn')) return;
-
-        // текущий инструмент
-        window.currentTool = btn.dataset.tool;
-
-        // сброс всех dropdown
-        dropdowns.forEach(dropdown => dropdown.reset());
-
-        // подсветка активной кнопки
-        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    });
+// Закрыть dropdown при клике вне
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.dropdown')) {
+    dropdowns.forEach(d => d.classList.remove('open'));
+  }
 });

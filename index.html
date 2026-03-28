@@ -20,6 +20,14 @@
                         <option value="3">3</option>
                     </select>
                 </div>
+                <div class="tool-panel">
+                    <label for="unitSelect" class="tool-label">Единицы:</label>
+                    <select id="unitSelect" class="tool-select">
+                        <option value="мм">мм</option>
+                        <option value="cm">см</option>
+                        <option value="μm">мкм</option>
+                    </select>
+                </div>
                 <div class="dropdown">
                     <button class="tool-btn dropdown-btn" id="figureDropdown">Эталоны ↓</button>
                     <div class="dropdown-content">
@@ -44,7 +52,7 @@
                     </div>
                 </div>
                 <div class="dropdown">
-                    <button class="tool-btn dropdown-btn" id="figureDropdown">Инструменты для шва ↓</button>
+                    <button class="tool-btn dropdown-btn" id="figureDropdown">Измерительные фигуры ↓</button>
                     <div class="dropdown-content">
                         <div class="dropdown-item" data-tool="ruler">Линейка</div>
                         <div class="dropdown-item" data-tool="measureRect">Изм. прямоугольник</div>
