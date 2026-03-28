@@ -20,18 +20,38 @@
                         <option value="3">3</option>
                     </select>
                 </div>
-                <button class="tool-btn" data-tool="line_etalon">Эталонная линия</button>
-                <button class="tool-btn active" data-tool="line">Линия</button>
-                <button class="tool-btn" data-tool="rectangle">Прямоугольник</button>
-                <button class="tool-btn" data-tool="ellipse">Эллипс</button>
-                <button class="tool-btn" data-tool="ellipse3">Эллипс 3</button>
-                <button class="tool-btn find_shov" data-tool="find_shov">Шов</button>
-                <button class="tool-btn delete_shov" data-tool="find_shov">Удалить шов</button>
-                <!-- <button class="tool-btn inDev" data-tool="text">Текст</button> -->
-                <button class="tool-btn" data-tool="ruler">Линейка</button>
-                <button class="tool-btn" data-tool="measureRect">Измерительный прямоугольник</button>
-                <button class="tool-btn" data-tool="measureEllipse">Измерительный элипс</button>
-                <button class="tool-btn" data-tool="measureEllipse3">Измерительный элипс 3</button>
+                <div class="dropdown">
+                    <button class="tool-btn dropdown-btn" id="figureDropdown">Эталоны ↓</button>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" data-tool="line_etalon">Эталонная линия</div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="tool-btn dropdown-btn" id="figureDropdown">Фигуры ↓</button>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" data-tool="line">Линия</div>
+                        <div class="dropdown-item" data-tool="rectangle">Прямоугольник</div>
+                        <div class="dropdown-item" data-tool="ellipse">Эллипс</div>
+                        <div class="dropdown-item" data-tool="ellipse3">Эллипс 3</div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="tool-btn dropdown-btn" id="figureDropdown">Инструменты для шва ↓</button>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item find_shov" data-tool="find_shov">Построить шов</div>
+                        <div class="dropdown-item delete_shov" data-tool="find_shov">Удаление шва</div>
+
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="tool-btn dropdown-btn" id="figureDropdown">Инструменты для шва ↓</button>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" data-tool="ruler">Линейка</div>
+                        <div class="dropdown-item" data-tool="measureRect">Изм. прямоугольник</div>
+                        <div class="dropdown-item" data-tool="measureEllipse">Изм. элипс</div>
+                        <div class="dropdown-item" data-tool="measureEllipse3">Изм. элипс 3</div>
+                    </div>
+                </div>
 
                 <div>
                     <input type="color" id="colorPicker" class="color-picker" value="#ff0000">

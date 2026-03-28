@@ -129,7 +129,7 @@ canvas.addEventListener("mouseup", stopDraw)
 // отрисовка элемента
 function startDraw(e) {
     isDrawing = true
-    let tool = document.querySelector(".active").dataset.tool
+    let tool = window.currentTool
     if (tool == "line") {
         drawLine(e)
     } else if (tool == "rectangle") {
@@ -230,7 +230,7 @@ function continueDraw(e) {
     drawAllMeasureRects()
     
     // Рисуем текущую фигуру только если процесс рисования активен
-    let tool = document.querySelector(".active")?.dataset.tool
+    let tool = window.currentTool
     if (tool == "line") {
         drawingLine(e)
     } else if (tool == "rectangle") {
@@ -349,7 +349,7 @@ function update_mouse_coords(e) {
 // конец отрисовки
 function stopDraw(e) {
     if (isDrawing) {
-        let tool = document.querySelector(".active").dataset.tool
+        let tool = window.currentTool
 
         if (tool == "line") {
             lineEnd(e)

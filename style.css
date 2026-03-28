@@ -169,6 +169,40 @@ body {
     font-size: 14px;
 }
 
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #21262F;
+    border: 1px solid #3a3f4b;
+    border-radius: 8px;
+    min-width: 160px;
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+.dropdown-item {
+    padding: 8px 12px;
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.dropdown.open .dropdown-content {
+    display: block;
+}
+
+.dropdown-btn {
+    min-width: 145px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
 @media (max-width: 1200px) {
     .tools-back {
         gap: 6px;

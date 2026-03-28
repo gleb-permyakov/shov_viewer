@@ -1,11 +1,18 @@
 // active tool-btn переключатель
+window.currentTool = "line";
 const tools = document.querySelectorAll(".tool-btn")
+
 tools.forEach(tool => {
-    tool.addEventListener("click", () => {
+    tool.addEventListener("click", (e) => {
+
+        // если это dropdown — не ломаем его
+        if (tool.closest(".dropdown")) return;
+
         clearAllActive()
         tool.classList.add("active")
+        currentTool = tool.dataset.tool
     })
-});
+})
 
 function clearAllActive() {
     tools.forEach(tool => {
@@ -231,3 +238,85 @@ selectorEtalon.addEventListener("change", function() {
     mmToPx(len_etalon)
     continueDraw()
 })
+
+const dropdowns = document.querySelectorAll('.dropdown');
+
+// Для хранения глобально выбранного инструмента
+window.currentTool = window.currentTool || null;
+
+dropdowns.forEach(dropdown => {
+    const btn = dropdown.querySelector('.dropdown-btn');
+    const items = dropdown.querySelectorAll('.dropdown-item');
+
+    // исходный текст кнопки
+    const defaultText = btn.textContent;
+
+    // открыть/закрыть dropdown
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // закрываем все остальные dropdown
+        dropdowns.forEach(d => {
+            if (d !== dropdown) {
+                d.classList.remove('open');
+                d.reset();
+            }
+        });
+        dropdown.classList.toggle('open');
+    });
+
+    // выбор элемента внутри dropdown
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            // сохраняем выбранный инструмент
+            window.currentTool = item.dataset.tool;
+
+            // подсветка выбранного элемента
+            items.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+
+            // подсветка кнопки dropdown
+            document.querySelectorAll('.dropdown-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // обновление текста кнопки
+            btn.textContent = item.textContent + " ↓";
+
+            // закрываем dropdown
+            dropdown.classList.remove('open');
+
+            // снимаем подсветку с обычных кнопок вне dropdown
+            document.querySelectorAll('.tool-btn').forEach(b => {
+                if (!b.classList.contains('dropdown-btn')) b.classList.remove('active');
+            });
+        });
+    });
+
+    // функция сброса dropdown к исходному состоянию
+    dropdown.reset = function() {
+        btn.textContent = defaultText;
+        btn.classList.remove('active');
+        items.forEach(i => i.classList.remove('active'));
+    };
+});
+
+// закрытие всех dropdown при клике вне
+document.addEventListener('click', () => {
+    dropdowns.forEach(dropdown => dropdown.classList.remove('open'));
+});
+
+// подсветка обычных кнопок вне dropdown
+document.querySelectorAll('.tool-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if (btn.classList.contains('dropdown-btn')) return;
+
+        // текущий инструмент
+        window.currentTool = btn.dataset.tool;
+
+        // сброс всех dropdown
+        dropdowns.forEach(dropdown => dropdown.reset());
+
+        // подсветка активной кнопки
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
