@@ -334,3 +334,4 @@ function updateToolStatus(name) {
 document.addEventListener('DOMContentLoaded', () => {
     new DropdownManager();
 });
+
