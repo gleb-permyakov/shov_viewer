@@ -1,11 +1,18 @@
 // active tool-btn переключатель
+window.currentTool = "line";
 const tools = document.querySelectorAll(".tool-btn")
+
 tools.forEach(tool => {
-    tool.addEventListener("click", () => {
+    tool.addEventListener("click", (e) => {
+
+        // если это dropdown — не ломаем его
+        if (tool.closest(".dropdown")) return;
+
         clearAllActive()
         tool.classList.add("active")
+        currentTool = tool.dataset.tool
     })
-});
+})
 
 function clearAllActive() {
     tools.forEach(tool => {
@@ -231,3 +238,99 @@ selectorEtalon.addEventListener("change", function() {
     mmToPx(len_etalon)
     continueDraw()
 })
+
+// ====== DROPDOWN MANAGER ======
+class DropdownManager {
+    constructor() {
+        this.dropdowns = Array.from(document.querySelectorAll('.dropdown'));
+        this.activeDropdown = null;
+
+        this.init();
+    }
+
+    init() {
+        // Клик по кнопке dropdown
+        this.dropdowns.forEach(dropdown => {
+            const btn = dropdown.querySelector('.dropdown-btn');
+            const content = dropdown.querySelector('.dropdown-content');
+
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // чтобы не сработал глобальный клик
+
+                // Если уже открыт другой dropdown — закрываем его
+                if (this.activeDropdown && this.activeDropdown !== dropdown) {
+                    this.closeDropdown(this.activeDropdown);
+                }
+
+                // Переключаем текущий dropdown
+                if (dropdown.classList.contains('open')) {
+                    this.closeDropdown(dropdown);
+                } else {
+                    this.openDropdown(dropdown);
+                }
+            });
+
+            // Клик по элементу dropdown
+            content.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    // Подсветка выбранного элемента
+                    content.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Обновляем текст кнопки
+                    btn.textContent = item.textContent + ' ↓';
+
+                    // Закрываем dropdown
+                    this.closeDropdown(dropdown);
+
+                    // Вызов кастомного callback для действия (например, выбор инструмента)
+                    if (item.dataset.tool) {
+                        window.currentTool = item.dataset.tool;
+                        updateToolStatus(item.textContent);
+                    }
+                });
+            });
+        });
+
+        // Закрыть при клике вне
+        document.addEventListener('click', () => this.closeAllDropdowns());
+
+        // Закрыть при ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.closeAllDropdowns();
+        });
+    }
+
+    openDropdown(dropdown) {
+        dropdown.classList.add('open');
+        this.activeDropdown = dropdown;
+    }
+
+    closeDropdown(dropdown) {
+        dropdown.classList.remove('open');
+        if (this.activeDropdown === dropdown) this.activeDropdown = null;
+    }
+
+    closeAllDropdowns() {
+        this.dropdowns.forEach(d => d.classList.remove('open'));
+        this.activeDropdown = null;
+    }
+}
+
+// ====== HELPER FUNCTION ======
+function updateToolStatus(name) {
+    // Убираем активность со всех обычных кнопок
+    const tools = document.querySelectorAll(".tool-btn");
+    tools.forEach(tool => tool.classList.remove('active'));
+
+    // Обновляем статус (если есть блок статуса)
+    const status = document.getElementById('status');
+    if (status) status.textContent = `Выбран инструмент: ${name}`;
+}
+
+// ====== ИНИЦИАЛИЗАЦИЯ ======
+document.addEventListener('DOMContentLoaded', () => {
+    new DropdownManager();
+});

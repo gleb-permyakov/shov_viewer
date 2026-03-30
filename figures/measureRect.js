@@ -38,31 +38,31 @@ function drawAllMeasureRects() {
 
 // во время рисования
 function drawingMeasureRect(e) {
+
     if (!isDrawing) return
 
-    const coords = getCanvasCoords(e);
-    const x = coords.x;
-    const y = coords.y;
+    const coords = getCanvasCoords(e)
+    const x = coords.x
+    const y = coords.y
 
     const startX = actual_measureRect_data[2]
     const startY = actual_measureRect_data[3]
 
-    const width = x - startX
-    const height = y - startY
     const left = Math.min(startX, x)
     const top = Math.min(startY, y)
 
-    // рисуем прямоугольник
+    const width = Math.abs(x - startX)
+    const height = Math.abs(y - startY)
+
     ctx.strokeStyle = "yellow"
     ctx.lineWidth = 1
+
     ctx.beginPath()
     ctx.rect(left, top, width, height)
     ctx.stroke()
 
-    // рисуем размеры
     drawRectDimensions(left, top, width, height)
 }
-
 // завершение рисования прямоугольника
 function measureRectEnd(e) {
     const coords = getCanvasCoords(e)
