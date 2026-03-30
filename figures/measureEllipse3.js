@@ -76,9 +76,14 @@ function drawCurrentMeasureEllipse3(el) {
 function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.save()
     ctx.translate(cx, cy)
-    ctx.rotate(angle)
 
-    // Большая ось — сверху эллипса
+    // ======= Большая ось =======
+    let angleBig = angle
+    // если угол линии «вниз», переворачиваем текст
+    if(angleBig > Math.PI/2 || angleBig < -Math.PI/2) angleBig += Math.PI
+
+    ctx.save()
+    ctx.rotate(angleBig)
     ctx.font = "14px Arial"
     ctx.fillStyle = "yellow"
     ctx.strokeStyle = "black"
@@ -86,30 +91,29 @@ function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.textAlign = "center"
     ctx.textBaseline = "bottom"
 
-    const offsetBig = 17  // увеличиваем смещение для большего расстояния
-    // переворачиваем текст на 180° и смещаем наружу
-    ctx.save()
-    ctx.rotate(2*Math.PI)
-    ctx.strokeText((a*2*mmToPx_ratio).toFixed(2) + " мм", 0, -b - offsetBig)  // Увеличиваем смещение
-    ctx.fillText((a*2*mmToPx_ratio).toFixed(2) + " мм", 0, -b - offsetBig)
+    const offsetBig = 17
+    ctx.strokeText((a*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -b - offsetBig)
+    ctx.fillText((a*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -b - offsetBig)
     ctx.restore()
 
-    // Малая ось — перпендикулярно через центр
-    ctx.save()
-    ctx.rotate(-Math.PI/2) // повернули на 90° для малой оси
+    // ======= Малая ось =======
+    let angleSmall = angle - Math.PI/2
+    if(angleSmall > Math.PI/2 || angleSmall < -Math.PI/2) angleSmall += Math.PI
 
-    const offsetSmall = 27 // увеличиваем смещение для малой оси
+    ctx.save()
+    ctx.rotate(angleSmall)
+    ctx.font = "14px Arial"
+    ctx.fillStyle = "yellow"
+    ctx.strokeStyle = "black"
+    ctx.lineWidth = 1
     ctx.textAlign = "center"
-    ctx.textBaseline = "top"  // текст сверху наружу
+    ctx.textBaseline = "bottom"
 
-    // переворачиваем текст на 180° и смещаем наружу
-    ctx.save()
-    ctx.rotate(Math.PI)  // переворачиваем текст
-    ctx.strokeText((b*2*mmToPx_ratio).toFixed(2) + " мм", 0, -a - offsetSmall)  // увеличиваем смещение
-    ctx.fillText((b*2*mmToPx_ratio).toFixed(2) + " мм", 0, -a - offsetSmall)
+    const offsetSmall = 27
+    ctx.strokeText((b*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -a - offsetSmall)
+    ctx.fillText((b*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -a - offsetSmall)
     ctx.restore()
 
-    ctx.restore()
     ctx.restore()
 }
 

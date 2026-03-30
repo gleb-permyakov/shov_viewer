@@ -239,6 +239,26 @@ selectorEtalon.addEventListener("change", function() {
     continueDraw()
 })
 
+let unit = "мм";       // текущая выбранная единица
+let unitFactor = 1;    // коэффициент пересчёта
+
+const unitSelect = document.getElementById('unitSelect');
+
+unitSelect.addEventListener("change", function() {
+    unit = this.value; // сохраняем текущую единицу
+
+    if (unit === "мм") {
+        unitFactor = 1;
+    } else if (unit === "cm") {
+        unitFactor = 0.1;
+    } else if (unit === "mkm") {
+        unitFactor = 1000;
+    }
+
+    // перерисовать все фигуры с новым коэффициентом
+    continueDraw(); // 
+});
+
 // ====== DROPDOWN MANAGER ======
 class DropdownManager {
     constructor() {
