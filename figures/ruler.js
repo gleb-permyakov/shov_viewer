@@ -142,7 +142,7 @@ function drawLengthText(x1, y1, x2, y2, length) {
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
     
-    const text = length.toFixed(2) + " мм";
+    const text = length.toFixed(2);
     ctx.strokeText(text, midX, midY - 10);
     ctx.fillText(text, midX, midY - 10);
 }
