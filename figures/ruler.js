@@ -27,7 +27,7 @@ function drawAllRulers() {
         // подписываем длину
         dx = ruler[4] - ruler[2]
         dy = ruler[5] - ruler[3]
-        const length = Math.sqrt(dx*dx + dy*dy) * mmToPx_ratio;
+        const length = Math.sqrt(dx*dx + dy*dy) * mmToPx_ratio * unitFactor;
         drawLengthText(ruler[2], ruler[3], ruler[4], ruler[5], length)
     })
 }
@@ -56,7 +56,7 @@ function drawingRuler(e) {
 
     const dx = x - startX;
     const dy = y - startY;
-    const length = Math.sqrt(dx*dx + dy*dy) * mmToPx_ratio;
+    const length = Math.sqrt(dx*dx + dy*dy) * mmToPx_ratio * unitFactor;
 
     drawLengthText(startX, startY, x, y, length)
 }
@@ -134,15 +134,30 @@ function rulerEnd(e) {
 function drawLengthText(x1, y1, x2, y2, length) {
     const midX = (x1 + x2) / 2;
     const midY = (y1 + y2) / 2;
-    
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let angle = Math.atan2(dy, dx);
+
+    // если линия направлена вниз или влево — переворачиваем текст
+    if (angle > Math.PI/2 || angle < -Math.PI/2) {
+        angle += Math.PI; // поворачиваем на 180°
+    }
+
+    ctx.save();
+    ctx.translate(midX, midY);
+    ctx.rotate(angle);
+
     ctx.font = "14px Arial";
     ctx.fillStyle = "yellow";
     ctx.strokeStyle = "black";
     ctx.lineWidth = linewidth;
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
-    
-    const text = length.toFixed(2);
-    ctx.strokeText(text, midX, midY - 10);
-    ctx.fillText(text, midX, midY - 10);
+
+    // вывод длины с единицами измерения
+    const text = (length).toFixed(2);
+    ctx.strokeText(text, 0, -10); // 10 px над линией
+    ctx.fillText(text, 0, -10);
+
+    ctx.restore();
 }

@@ -76,8 +76,8 @@ function measureRectEnd(e) {
 // функция рисования размеров
 function drawRectDimensions(x, y, widthPx, heightPx) {
 
-    const width = Math.abs(widthPx) * mmToPx_ratio
-    const height = Math.abs(heightPx) * mmToPx_ratio
+    const width = Math.abs(widthPx) * mmToPx_ratio * unitFactor
+    const height = Math.abs(heightPx) * mmToPx_ratio * unitFactor
 
     ctx.font = "14px Arial"
     ctx.fillStyle = "yellow"
@@ -87,13 +87,13 @@ function drawRectDimensions(x, y, widthPx, heightPx) {
     ctx.textBaseline = "bottom"
 
     // ширина
-    const textW = width.toFixed(2) + " мм"
+    const textW = width.toFixed(2)
 
     ctx.strokeText(textW, x + widthPx / 2, y - 5)
     ctx.fillText(textW, x + widthPx / 2, y - 5)
 
     // высота
-    const textH = height.toFixed(2) + " мм"
+    const textH = height.toFixed(2)
 
     ctx.save()
     ctx.translate(x - 5, y + heightPx / 2)
