@@ -147,6 +147,10 @@ body {
     color: #ffffff;
 }
 
+.brightness{
+    color: #e0e0e0;
+}
+
 .file-input {
     display: none;
 }
@@ -205,6 +209,63 @@ body {
     justify-content: center;
     align-items: center;
 
+}
+
+.bc-wrapper {
+    position: relative;
+}
+
+.bc-panel {
+    position: absolute;
+    top: 110%; /* прямо под кнопкой */
+    left: 0;
+
+    background: #21262F;
+    border: 1px solid #3a3f4b;
+    border-radius: 10px;
+
+    padding: 12px;
+    width: 220px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bc-panel.hidden {
+    display: none;
+}
+
+.bc-panel input[type="number"] {
+    width: 60px;               /* компактное поле */
+    padding: 4px 6px;          /* немного внутреннего отступа */
+    margin-left: 6px;          /* отступ от надписи */
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;        /* числа по центру */
+    border: 2px solid  #8cb5ee;; /* желтая рамка, как твой цвет тулбара */
+    border-radius: 4px;        /* скругление углов */
+    background-color: #222;    /* темный фон, как тулбар */
+    color: #e0e0e0;            /* жёлтый текст */
+    outline: none;             /* убираем стандартное выделение */
+    transition: all 0.2s ease;
+}
+
+.bc-panel input[type="number"]:hover {
+    border-color: #fff;        /* подсветка при наведении */
+}
+
+.bc-panel input[type="number"] {
+    border: 2px solid #3a3f4b; /* как границы кнопок */
+    color: #e0e0e0;            /* как основной текст тулбара */
+    background-color: #21262F; /* темный фон панели */
+}
+.bc-panel input[type="number"]:focus {
+    border-color: #8cb5ee;     /* светло-синий акцент при фокусе */
+    box-shadow: 0 0 5px rgba(140, 181, 238, 0.5);
 }
 
 @media (max-width: 1200px) {

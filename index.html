@@ -61,6 +61,26 @@
                     </div>
                 </div>
 
+                <div class="bc-wrapper">
+                    <button class="tool-btn" id="bcBtn">Яркость/Контрастность</button>
+
+                    <div id="bcPanel" class="bc-panel hidden">
+                        <label class="brightness">
+                            Яркость: 
+                            <input type="number" id="brightnessValue" min="-100" max="100" value="0">
+                        </label>
+                        <input type="range" id="brightnessSlider" min="-100" max="100" value="0">
+
+                        <label class="brightness">
+                            Контраст: 
+                            <input type="number" id="contrastValue" min="-100" max="100" value="0">
+                        </label>
+                        <input type="range" id="contrastSlider" min="-100" max="100" value="0">
+
+                        <button id="resetBC" class="tool-btn">Сброс</button>
+                    </div>
+                </div>
+
                 <div>
                     <input type="color" id="colorPicker" class="color-picker" value="#ff0000">
                     
