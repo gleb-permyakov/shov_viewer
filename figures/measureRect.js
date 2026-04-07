@@ -157,6 +157,9 @@ function findPointInMeasureRect(e) {
             measureRects_without_hovered_element =
                 measureRects.slice(0, counter)
                 .concat(measureRects.slice(counter + 1))
+
+            // для добавления дефекта
+            element_to_add = ["rect", [Math.abs(right-left), Math.abs(top-bottom)]]
         }
 
         counter++

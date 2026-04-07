@@ -120,6 +120,9 @@ function findPointInMeasureEllipse(e) {
             measureEllipses_without_hovered_element =
                 measureEllipses.slice(0, counter)
                 .concat(measureEllipses.slice(counter+1))
+
+            // для добавления дефекта
+            element_to_add = ["ellipse", [Math.abs(rx*2), Math.abs(ry*2)]]
         }
 
         counter++

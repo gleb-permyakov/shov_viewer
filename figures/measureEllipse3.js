@@ -160,6 +160,9 @@ function findPointInMeasureEllipse3(e) {
             measureEllipses3_without_hovered_element =
                 measureEllipses3.slice(0, counter)
                 .concat(measureEllipses3.slice(counter+1))
+
+            // для добавления дефекта
+            element_to_add = ["ellipse3", [Math.abs(a*2), Math.abs(b*2)]]
         }
 
         counter++

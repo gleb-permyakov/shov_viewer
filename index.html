@@ -84,12 +84,37 @@
         <div class="info">
             <div id="status">Загрузите изображение или начните рисовать</div>
         </div>
+
+    </div>
+
+    <div class="annotation">
+            <div class="defects">
+                <!-- <div class="defect">Defect 1</div>
+                <div class="defect">Defect 2</div> -->
+            </div>
+            <div class="comments">
+                <!-- <div class="comment">Comment 1</div> -->
+            </div>
+        </div>
+
+    <div class="popup">
+        <p>Добавление дефекта</p>
+        <select name="defects" id="defect_selector">
+            <option value="Пора">Пора</option>
+            <option value="Трещина">Трещина</option>
+            <option value="Непровар">Непровар</option>
+            <option value="Шлак">Шлак</option>
+        </select>
+        <div class="popup_btns">
+            <div class="btn_ok popup_btn"><p>Готово</p></div>
+            <div class="btn_cancel popup_btn">Отмена</div>
+        </div>
     </div>
 
     <!-- JS scripts -->
     <script src="interface.js" defer></script>
     <!-- JS figures -->
-     <script src="./figures/measureRect.js" defer></script>
+    <script src="./figures/measureRect.js" defer></script>
     <script src="./figures/line.js" defer></script>
     <script src="./figures/ruler.js" defer></script>
     <script src="./figures/line_etalon.js" defer></script>
@@ -104,6 +129,6 @@
     <!-- поисковик шва -->
     <script src="shov_finder.js" defer></script>
     <!-- сохранение аннотаций -->
-    <script src="annotation.js"></script>
+    <script src="annotation.js" defer></script>
 </body>
 </html>

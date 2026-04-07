@@ -23,6 +23,10 @@ measureEllipses_without_hovered_element = []
 measureEllipses3_without_hovered_element = []
 mouse_over_element = false
 
+// для добавления дефекта в аннотацию
+defects = [] // [ellipse3, [длина, ширина], "пора"], []...
+element_to_add = [] // тут временно храним то, что подсветили и добавляем
+
 // задаем параметры для работы со швом
 mouse_down = false
 moving_shov_angle = false
@@ -100,7 +104,8 @@ fileInput.addEventListener('change', function(e) {
 })
 
 canvas.addEventListener("mousedown", (e) => {
-    if (e.button === 2) { // правая кнопка - только панорамирование
+    if (e.button === 2) { // правая кнопка - только панорамирование или добавление дефекта в аннотацию
+        addDefect()
         return; // не запускаем рисование
     }
     
