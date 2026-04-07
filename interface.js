@@ -339,7 +339,7 @@ class DropdownManager {
     }
 }
 
-// ====== HELPER FUNCTION ======
+//HELPER FUNCTION 
 function updateToolStatus(name) {
     // Убираем активность со всех обычных кнопок
     const tools = document.querySelectorAll(".tool-btn");
@@ -350,8 +350,71 @@ function updateToolStatus(name) {
     if (status) status.textContent = `Выбран инструмент: ${name}`;
 }
 
-// ====== ИНИЦИАЛИЗАЦИЯ ======
+//ИНИЦИАЛИЗАЦИЯ 
 document.addEventListener('DOMContentLoaded', () => {
     new DropdownManager();
 });
 
+//яркость/контрастность
+const bcBtn = document.getElementById("bcBtn")
+const bcPanel = document.getElementById("bcPanel")
+
+// переключение панели
+bcBtn.addEventListener("click", (e) => {
+    e.stopPropagation()
+    bcPanel.classList.toggle("hidden")
+})
+
+// клик вне панели — закрыть
+document.addEventListener("click", (e) => {
+    if (!bcPanel.contains(e.target) && e.target !== bcBtn) {
+        bcPanel.classList.add("hidden")
+    }
+})
+
+const brightnessSlider = document.getElementById("brightnessSlider")
+const contrastSlider = document.getElementById("contrastSlider")
+const brightnessValue = document.getElementById("brightnessValue")
+const contrastValue = document.getElementById("contrastValue")
+const resetBC = document.getElementById("resetBC")
+
+// Ползунки изменяют числа
+brightnessSlider.addEventListener("input", () => {
+    brightness = parseInt(brightnessSlider.value)
+    brightnessValue.value = brightness
+    continueDraw({clientX: mouse_x, clientY: mouse_y})
+})
+
+contrastSlider.addEventListener("input", () => {
+    contrast = parseInt(contrastSlider.value)
+    contrastValue.value = contrast
+    continueDraw({clientX: mouse_x, clientY: mouse_y})
+})
+
+// Числовые поля изменяют ползунки
+brightnessValue.addEventListener("input", () => {
+    let val = parseInt(brightnessValue.value) || 0
+    val = Math.max(-100, Math.min(100, val))
+    brightness = val
+    brightnessSlider.value = val
+    continueDraw({clientX: mouse_x, clientY: mouse_y})
+})
+
+contrastValue.addEventListener("input", () => {
+    let val = parseInt(contrastValue.value) || 0
+    val = Math.max(-100, Math.min(100, val))
+    contrast = val
+    contrastSlider.value = val
+    continueDraw({clientX: mouse_x, clientY: mouse_y})
+})
+
+// Кнопка сброса
+resetBC.addEventListener("click", () => {
+    brightness = 0
+    contrast = 0
+    brightnessSlider.value = 0
+    contrastSlider.value = 0
+    brightnessValue.value = 0
+    contrastValue.value = 0
+    continueDraw({clientX: mouse_x, clientY: mouse_y})
+})

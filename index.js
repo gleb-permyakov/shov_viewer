@@ -9,6 +9,8 @@ let original_image
 let isDrawing = false
 let len_etalon = 0
 let mmToPx_ratio = 1
+let brightness = 0
+let contrast = 0
 
 
 // для удаления элементов
@@ -219,9 +221,16 @@ function continueDraw(e) {
     
     // отрисовываем все время 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    //применяем фильтр ТОЛЬКО к изображению
+    ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
+
     if (original_image) {
         ctx.drawImage(original_image, 0, 0)
-    }   
+    }
+
+    //сбрасываем фильтр, чтобы фигуры не искажались
+    ctx.filter = "none"  
 
     drawAllShovLines()
     drawAllLines()
