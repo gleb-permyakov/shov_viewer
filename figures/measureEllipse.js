@@ -1,5 +1,5 @@
 let measureEllipses = []
-let actual_measureEllipse_data = [] // [цвет, толщина, x1, y1, x2, y2]
+let actual_measureEllipse_data = [] // [цвет, толщина, x1, y1, x2, y2, measure_id]
 
 // старт рисования эллипса
 function drawMeasureEllipse(e) {
@@ -62,7 +62,8 @@ function measureEllipseEnd(e) {
     const x2 = coords.x
     const y2 = coords.y
 
-    actual_measureEllipse_data.push(x2, y2)
+    actual_measureEllipse_data.push(x2, y2, measure_id)
+    measure_id += 1
     measureEllipses.push(actual_measureEllipse_data)
 }
 
@@ -122,7 +123,8 @@ function findPointInMeasureEllipse(e) {
                 .concat(measureEllipses.slice(counter+1))
 
             // для добавления дефекта
-            element_to_add = ["ellipse", [Math.abs(rx*2), Math.abs(ry*2)]]
+            element_to_add = ["ellipse", [Math.abs(rx*2), Math.abs(ry*2)], el[6]]
+            console.log(element_to_add)
         }
 
         counter++

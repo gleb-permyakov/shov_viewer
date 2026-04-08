@@ -378,7 +378,7 @@ body {
     width: 50%;
 }
 
-.popup {
+.popup_add_defect, .popup_delete_defect {
     display: none;
     position: absolute;
     left: calc(50% - 200px);
@@ -386,7 +386,7 @@ body {
     width: 400px;
     height: 110px;
     background-color: #fff;
-    color: #363636;
+    color: #21262F;
     border-radius: 12px;
     padding: 10px 15px;
     font-size: 16px;
@@ -415,7 +415,7 @@ body {
     width: 180px;
     padding: 5px;
     /* margin: 0 auto; */
-    background-color: #191b80;
+    background-color: #21262F;
     color: #fff;
     font-weight: normal;
     border-radius: 5px;
@@ -423,4 +423,8 @@ body {
     align-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+.popup_delete_defect .popup_btn {
+    width: 120px;
 }

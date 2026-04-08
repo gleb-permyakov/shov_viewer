@@ -2,7 +2,7 @@
 
 let measureEllipses3 = []
 let measureEllipses3_without_hovered_element = []
-let actual_measureEllipse3_data = []  // [цвет, толщина, xA, yA, xB, yB, xC, yC]
+let actual_measureEllipse3_data = []  // [цвет, толщина, xA, yA, xB, yB, xC, yC, measure_id]
 let points_measure3 = []
 let measureEllipse3_status = 1
 
@@ -30,7 +30,8 @@ function drawMeasureEllipse3(e) {
         actual_measureEllipse3_data.push(x, y)
         measureEllipse3_status = 3
     } else if(measureEllipse3_status === 3) {
-        actual_measureEllipse3_data.push(x, y)
+        actual_measureEllipse3_data.push(x, y, measure_id) // тут помимо координат еще id добавляем
+        measure_id += 1
         drawCurrentMeasureEllipse3(actual_measureEllipse3_data)
         measureEllipses3.push(actual_measureEllipse3_data)
         points_measure3 = []
@@ -162,20 +163,22 @@ function findPointInMeasureEllipse3(e) {
                 .concat(measureEllipses3.slice(counter+1))
 
             // для добавления дефекта
-            element_to_add = ["ellipse3", [Math.abs(a*2), Math.abs(b*2)]]
+            element_to_add = ["ellipse3", [Math.abs(a*2), Math.abs(b*2)], el[8]]
         }
 
         counter++
     })
 }
 
-// завершение на mouseup
-function measureEllipse3End(e) {
-    if(actual_measureEllipse3_data.length === 4 || actual_measureEllipse3_data.length === 6) {
-        const coords = getCanvasCoords(e)
-        actual_measureEllipse3_data.push(coords.x, coords.y)
-        measureEllipses3.push(actual_measureEllipse3_data)
-        points_measure3 = []
-        measureEllipse3_status = 1
-    }
-}
+// // завершение на mouseup          функция нигде не используется т.к. устарела
+// function measureEllipse3End(e) {
+//     if(actual_measureEllipse3_data.length === 4 || actual_measureEllipse3_data.length === 6) {
+//         const coords = getCanvasCoords(e)
+//         console.log(measure_id)
+//         actual_measureEllipse3_data.push(coords.x, coords.y, measure_id) 
+//         measure_id += 1
+//         measureEllipses3.push(actual_measureEllipse3_data)
+//         points_measure3 = []
+//         measureEllipse3_status = 1
+//     }
+// }

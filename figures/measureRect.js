@@ -1,5 +1,5 @@
 let measureRects = []
-let actual_measureRect_data = [] // [цвет, толщина, x1, y1, x2, y2]
+let actual_measureRect_data = [] // [цвет, толщина, x1, y1, x2, y2, measure_id]
 
 // старт рисования прямоугольника
 function drawMeasureRect(e) {
@@ -69,7 +69,8 @@ function measureRectEnd(e) {
     const endX = coords.x
     const endY = coords.y
 
-    actual_measureRect_data.push(endX, endY)
+    actual_measureRect_data.push(endX, endY, measure_id)
+    measure_id += 1
     measureRects.push(actual_measureRect_data)
 }
 
@@ -159,7 +160,7 @@ function findPointInMeasureRect(e) {
                 .concat(measureRects.slice(counter + 1))
 
             // для добавления дефекта
-            element_to_add = ["rect", [Math.abs(right-left), Math.abs(top-bottom)]]
+            element_to_add = ["rect", [Math.abs(right-left), Math.abs(top-bottom)], rect[6]]
         }
 
         counter++
