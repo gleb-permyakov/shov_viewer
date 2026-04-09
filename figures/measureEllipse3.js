@@ -153,7 +153,7 @@ function findPointInMeasureEllipse3(e) {
             ctx.beginPath()
             ctx.ellipse(cx, cy, a, b, angle, 0, 2*Math.PI)
             ctx.strokeStyle = "#fafafa"
-            ctx.lineWidth = el[1]
+            ctx.lineWidth = el[1] + 1
             ctx.stroke()
 
             mouse_over_element = true

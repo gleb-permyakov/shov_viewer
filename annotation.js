@@ -99,10 +99,17 @@ function popup_delete_btns() {
         const selector_defect = document.querySelector("#defect_selector2")
         // заменяем название дефекта в плашке
         defects.forEach(element => {
-            if (element[2] == search_defect_by_id(fixed_element_data[2])) {
+            if (element[2] == fixed_element_data[2]) {
                 element[3] = selector_defect.value
             }
         });
+        popup.classList.remove("show")
+        redraw_defects()
+    })
+
+    const delete_btn = document.querySelector(".btn_delete2")
+    delete_btn.addEventListener("click", () => {
+        defects = defects.filter(element => element[2] != fixed_element_data[2])
         popup.classList.remove("show")
         redraw_defects()
     })
@@ -116,9 +123,27 @@ function redraw_defects() {
     new_inner = ""
     console.log(defects)
     defects.forEach(element => {
-        new_inner += '<div class="defect" data-defect-id="' + element[2] + '"><p>' + element[3] + '</p><p>' + (element[1][0]).toFixed(2) + ' x ' + (element[1][1]).toFixed(2) + ' мм</p></div>'
+        new_inner += '<div class="defect" data-defect-id="' + element[2] + '" data-figure="' + element[0] + '"><p>' + element[3] + '</p><p>' + (element[1][0]).toFixed(2) + ' x ' + (element[1][1]).toFixed(2) + ' мм</p></div>'
     });
     defects_div.innerHTML = new_inner
+    // теперь выставляем обработчик на наведение мыши
+    defects_annotation = document.querySelectorAll(".defect")
+    defects_annotation.forEach(element => {
+        element.addEventListener("mouseenter", () => {
+            flash_measure(element)
+        })
+        element.addEventListener("mouseleave", () => {
+            redraw()
+        })
+        element.addEventListener("contextmenu", (e) => {
+            e.preventDefault()
+            if (e.button === 2) { 
+                const popup_delete = document.querySelector(".popup_delete_defect")
+                // fixed_element_data = [element[0], [(element[1][0]).toFixed(2), (element[1][1]).toFixed(2)], element[2]]
+                popup_delete.classList.add("show")
+            }
+        })
+    });
 }
 
 // id дефекта по measure_id
@@ -129,4 +154,103 @@ function search_defect_by_id(m_id) {
         }
     }
     return -1
+}
+
+// надо подсветить тот дефект, который связан с плашкой при наведении курсора на плашку
+function flash_measure(defect_annotation) {
+    if (defect_annotation.dataset.figure == "ellipse3") {
+        measureEllipses3.forEach(el => {
+            const xA = el[2], yA = el[3]
+            const xB = el[4], yB = el[5]
+            const xC = el[6], yC = el[7]
+
+            const cx = (xA + xB)/2
+            const cy = (yA + yB)/2
+
+            const dx = xB - xA
+            const dy = yB - yA
+            const a = Math.sqrt(dx*dx + dy*dy)/2
+            const angle = Math.atan2(dy, dx)
+
+            const cxC = xC - cx
+            const cyC = yC - cy
+            const b = Math.sqrt(cxC*cxC + cyC*cyC)
+
+            if (el[8] == defect_annotation.dataset.defectId) {
+                ctx.beginPath()
+                ctx.ellipse(cx, cy, a, b, angle, 0, 2*Math.PI)
+                ctx.strokeStyle = "#fafafa"
+                ctx.lineWidth = el[1] + 1
+                ctx.stroke()
+            }
+        });
+    } else if (defect_annotation.dataset.figure == "rect") {
+        measureRects.forEach(rect => {
+            const x1 = rect[2]
+            const y1 = rect[3]
+            const x2 = rect[4]
+            const y2 = rect[5]
+
+            const left = Math.min(x1, x2)
+            const right = Math.max(x1, x2)
+            const top = Math.min(y1, y2)
+            const bottom = Math.max(y1, y2)
+
+            ctx.beginPath()
+            ctx.rect(left, top, right - left, bottom - top)
+            ctx.strokeStyle = "#fafafa"
+            ctx.lineWidth = rect[1] + 1
+            ctx.stroke()
+        })
+    } else if (defect_annotation.dataset.figure == "ellipse") {
+        measureEllipses.forEach(el => {
+            const x1 = el[2], y1 = el[3], x2 = el[4], y2 = el[5]
+            const rx = Math.abs(x2 - x1)/2
+            const ry = Math.abs(y2 - y1)/2
+            const cx = (x1 + x2)/2
+            const cy = (y1 + y2)/2
+
+            ctx.beginPath()
+            ctx.ellipse(cx, cy, rx, ry, 0, 0, 2*Math.PI)
+            ctx.strokeStyle = "#fafafa"
+            ctx.lineWidth = el[1] + 1
+            ctx.stroke()
+        });
+    }
+}
+
+// удалить дефект по айдишнику
+function delete_defect_annotation(m_id) {
+    for (i = 0; i < defects.length; i++) {
+        if (defects[i][2] == m_id) {
+            defects = defects.filter(element => element[2] != m_id)
+        }
+    }
+}
+
+// перерисовать без подсвечивания
+function redraw() {
+    // отрисовываем все время 
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    //применяем фильтр ТОЛЬКО к изображению
+    ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
+
+    if (original_image) {
+        ctx.drawImage(original_image, 0, 0)
+    }
+
+    //сбрасываем фильтр, чтобы фигуры не искажались
+    ctx.filter = "none"  
+
+    drawAllShovLines()
+    drawAllLines()
+    drawAllLinesEt()
+    drawAllRulers()
+    drawAllMeasureEllipses()
+    drawAllRects()
+    drawAllEllipses()
+    drawAllEllipses3()
+    drawAllMeasureEllipses3()
+    drawAllMeasureRects()
 }

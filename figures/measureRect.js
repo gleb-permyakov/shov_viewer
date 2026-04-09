@@ -150,7 +150,7 @@ function findPointInMeasureRect(e) {
             ctx.beginPath()
             ctx.rect(left, top, right - left, bottom - top)
             ctx.strokeStyle = "#fafafa"
-            ctx.lineWidth = rect[1]
+            ctx.lineWidth = rect[1] + 1
             ctx.stroke()
 
             mouse_over_element = true

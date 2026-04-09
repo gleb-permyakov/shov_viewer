@@ -195,6 +195,9 @@ function deleteElement(e) {
                 drawAllMeasureRects()
                 drawAllRulers()
             }, 100)
+            // удалить из аннотации дефект
+            delete_defect_annotation(fixed_element_data[2])
+            redraw_defects()
         }
     }
 }

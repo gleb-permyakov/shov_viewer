@@ -113,7 +113,7 @@ function findPointInMeasureEllipse(e) {
             ctx.beginPath()
             ctx.ellipse(cx, cy, rx, ry, 0, 0, 2*Math.PI)
             ctx.strokeStyle = "#fafafa"
-            ctx.lineWidth = el[1]
+            ctx.lineWidth = el[1] + 1
             ctx.stroke()
 
             mouse_over_element = true
@@ -124,7 +124,6 @@ function findPointInMeasureEllipse(e) {
 
             // для добавления дефекта
             element_to_add = ["ellipse", [Math.abs(rx*2), Math.abs(ry*2)], el[6]]
-            console.log(element_to_add)
         }
 
         counter++

@@ -102,6 +102,9 @@ function clearCanvas() {
     measureEllipses = []
     measureEllipses3 = []
     shov_lines = []
+    // чтобы дефекты в аннотации тоже чистились
+    defects = []
+    redraw_defects()
 }
 // очистка по кнопке
 document.querySelector('#clearBtn').addEventListener('click', function() {
