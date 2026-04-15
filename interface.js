@@ -147,6 +147,7 @@ if (canvasContainer) {
             // Применяем трансформацию
             canvas.style.transformOrigin = `${pointX}% ${pointY}%`;
             canvas.style.transform = `scale(${zoomLevel})`;
+            updateCommentInputPosition()
             
             // Обновляем статус
             document.getElementById('status').textContent = `Масштаб: ${Math.round(zoomLevel * 100)}%`;
@@ -184,7 +185,8 @@ window.addEventListener('mousemove', (e) => {
         
         // Обновляем смещение
         canvas.style.transform = `translate(${currentX + dx}px, ${currentY + dy}px) scale(${zoomLevel})`;
-        
+        updateCommentInputPosition()
+
         lastX = e.clientX;
         lastY = e.clientY;
     }
@@ -212,6 +214,7 @@ zoomInBtn.addEventListener('click', function() {
         const currentY = match ? parseFloat(match[2]) : 0;
         
         canvas.style.transform = `translate(${currentX}px, ${currentY}px) scale(${zoomLevel})`;
+        updateCommentInputPosition()
         document.getElementById('status').textContent = `Масштаб: ${Math.round(zoomLevel * 100)}%`;
     }
 });
@@ -226,6 +229,7 @@ zoomOutBtn.addEventListener('click', function() {
         const currentY = match ? parseFloat(match[2]) : 0;
         
         canvas.style.transform = `translate(${currentX}px, ${currentY}px) scale(${zoomLevel})`;
+        updateCommentInputPosition()
         document.getElementById('status').textContent = `Масштаб: ${Math.round(zoomLevel * 100)}%`;
     }
 });
@@ -233,6 +237,7 @@ zoomOutBtn.addEventListener('click', function() {
 resetZoomBtn.addEventListener('click', function() {
     zoomLevel = 1;
     canvas.style.transform = `translate(0px, 0px) scale(1)`;
+    updateCommentInputPosition()
     document.getElementById('status').textContent = `Масштаб: 100%`;
 });
 

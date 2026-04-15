@@ -6,6 +6,7 @@
     <title>Просмотрщик с рисованием</title>
     <link rel="stylesheet" href="./style.css">    
 </head>
+<div id="commentTooltip"></div>
 <body >
     <div class="viewer">
         <div class="tools">
@@ -80,7 +81,9 @@
                         <button id="resetBC" class="tool-btn">Сброс</button>
                     </div>
                 </div>
-
+                <div>
+                    <button class="tool-btn" data-tool="comment">Комментарий</button>
+                </div>
                 <div>
                     <input type="color" id="colorPicker" class="color-picker" value="#ff0000">
                     
@@ -165,5 +168,7 @@
     <script src="shov_finder.js" defer></script>
     <!-- сохранение аннотаций -->
     <script src="annotation.js" defer></script>
+    <!-- Комментарии -->
+    <script src="./figures/comments.js" defer></script>
 </body>
 </html>

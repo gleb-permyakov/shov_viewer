@@ -151,6 +151,9 @@ function startDraw(e) {
         drawMeasureEllipse(e)
     } else if (tool == "measureEllipse3") {
         drawMeasureEllipse3(e)
+    } else if (tool == "comment") {
+        if (editComment(e)) return
+        createComment(e)
     }
 }
 // удалить элемент
@@ -182,6 +185,7 @@ function deleteElement(e) {
             drawAllMeasureEllipses3()
             drawAllMeasureRects()
             drawAllRulers()
+            drawAllComments()
             // если вдруг что-то подзалагало, не отрисовалось - отрисовываем с задержкой
             setTimeout(() => {
                 console.log("TIMEOUT")
@@ -194,6 +198,7 @@ function deleteElement(e) {
                 drawAllMeasureEllipses3()
                 drawAllMeasureRects()
                 drawAllRulers()
+                drawAllComments()
             }, 100)
             // удалить из аннотации дефект
             delete_defect_annotation(fixed_element_data[2])
@@ -241,6 +246,7 @@ function continueDraw(e) {
     drawAllEllipses3()
     drawAllMeasureEllipses3()
     drawAllMeasureRects()
+    drawAllComments()
     
     // Рисуем текущую фигуру только если процесс рисования активен
     let tool = window.currentTool
@@ -258,7 +264,7 @@ function continueDraw(e) {
         drawingMeasureRect(e)
     } else if (tool == "measureEllipse") {
         drawingMeasureEllipse(e)
-    }
+    } 
 }
 // поиск точки в фигурах
 function findPointInFigures(e) {
@@ -273,6 +279,7 @@ function findPointInFigures(e) {
     findPointInMeasureEllipse3(e)
     findPointInShovMiddle(e)
     findPointInShovBottom(e)
+    findCommentHover(e)
 }
 // двигать угол шва
 function move_shov(e) {
