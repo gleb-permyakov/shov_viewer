@@ -1,19 +1,15 @@
 // ==========================
-// COMMENTS SYSTEM
+// COMMENTS SYSTEM (FIXED)
 // ==========================
 
 let comments = [] 
 // [x, y, text, id]
 
 let comment_id = 0
-
 const COMMENT_RADIUS = 5
 
-// активный input (для зума)
 let activeCommentInput = null
 let activeCommentPos = null
-
-// кастомный tooltip
 let commentTooltip = null
 
 
@@ -31,7 +27,6 @@ function createComment(e) {
         comments.push([x, y, text, comment_id])
         comment_id++
 
-        // сразу отрисовать
         requestAnimationFrame(() => {
             continueDraw({ clientX: mouse_x, clientY: mouse_y })
         })
@@ -43,66 +38,74 @@ function createComment(e) {
 // DRAW COMMENTS
 // ==========================
 function drawAllComments() {
-    comments.forEach(c => {
+    comments.forEach((c, index) => {
         const x = c[0]
         const y = c[1]
 
+        // круг
         ctx.beginPath()
         ctx.arc(x, y, COMMENT_RADIUS, 0, Math.PI * 2)
         ctx.fillStyle = "orange"
         ctx.fill()
+
+        // номер
+        ctx.font = "12px Arial"
+        ctx.textAlign = "left"
+        ctx.textBaseline = "middle"
+        ctx.fillStyle = "orange"
+
+        ctx.fillText(
+            index + 1,
+            x + COMMENT_RADIUS + 4,
+            y
+        )
     })
 }
 
 
 // ==========================
-// UPDATE INPUT POSITION
+// INPUT POSITION (FIXED SAFE)
 // ==========================
 function updateCommentInputPosition() {
     if (!activeCommentInput || !activeCommentPos) return
 
     const canvasRect = canvas.getBoundingClientRect()
-    const container = document.querySelector('.canvas-container')
-    const containerRect = container.getBoundingClientRect()
+    const containerRect = document.querySelector('.canvas-container').getBoundingClientRect()
 
-    // позиция относительно canvas
-    let left = activeCommentPos.x * zoomLevel + canvasRect.left
-    let top = activeCommentPos.y * zoomLevel + canvasRect.top
+    let left = canvasRect.left + activeCommentPos.x * zoomLevel
+    let top  = canvasRect.top  + activeCommentPos.y * zoomLevel
 
-    // размеры input
-    const inputWidth = activeCommentInput.offsetWidth || 100
-    const inputHeight = activeCommentInput.offsetHeight || 24
+    const w = activeCommentInput.offsetWidth || 120
+    const h = activeCommentInput.offsetHeight || 24
 
-    // 🔥 ЖЕСТКО ограничиваем внутри container (а не canvas)
+    // только canvas bounds
     const minLeft = containerRect.left
-    const maxLeft = containerRect.right - inputWidth
+    const maxLeft = containerRect.right - w
 
     const minTop = containerRect.top
-    const maxTop = containerRect.bottom - inputHeight
+    const maxTop = containerRect.bottom - h
 
     left = Math.max(minLeft, Math.min(left, maxLeft))
-    top = Math.max(minTop, Math.min(top, maxTop))
+    top  = Math.max(minTop, Math.min(top, maxTop))
 
     activeCommentInput.style.left = left + "px"
     activeCommentInput.style.top = top + "px"
 }
-
 // ==========================
-// INPUT UI
+// INPUT UI (FIXED)
 // ==========================
 function showCommentInput(x, y, initialText, onSave) {
 
     if (activeCommentInput) {
         activeCommentInput.remove()
+        activeCommentInput = null
+        activeCommentPos = null
     }
 
     const input = document.createElement("input")
-
     input.type = "text"
     input.maxLength = 30
     input.value = initialText
-
-    // ✅ теперь через CSS
     input.className = "comment-input"
 
     document.body.appendChild(input)
@@ -145,13 +148,13 @@ function showCommentInput(x, y, initialText, onSave) {
             if (document.activeElement !== input) {
                 save()
             }
-        }, 100)
+        }, 80)
     })
 }
 
 
 // ==========================
-// TOOLTIP
+// TOOLTIP (FIXED)
 // ==========================
 function showTooltip(text, x, y) {
     if (!commentTooltip) {
@@ -164,11 +167,8 @@ function showTooltip(text, x, y) {
 
     const rect = canvas.getBoundingClientRect()
 
-    commentTooltip.style.left =
-        (x * zoomLevel + rect.left + 10) + "px"
-
-    commentTooltip.style.top =
-        (y * zoomLevel + rect.top + 10) + "px"
+    commentTooltip.style.left = rect.left + x * zoomLevel + 10 + "px"
+    commentTooltip.style.top  = rect.top  + y * zoomLevel + 10 + "px"
 
     commentTooltip.style.display = "block"
 }
@@ -181,14 +181,12 @@ function hideTooltip() {
 
 
 // ==========================
-// HOVER (мгновенный)
+// HOVER
 // ==========================
 function findCommentHover(e) {
     const coords = getCanvasCoords(e)
     const x = coords.x
     const y = coords.y
-
-    let found = false
 
     for (let c of comments) {
         const dx = x - c[0]
@@ -197,14 +195,11 @@ function findCommentHover(e) {
 
         if (dist < COMMENT_RADIUS + 2) {
             showTooltip(c[2], c[0], c[1])
-            found = true
-            break
+            return
         }
     }
 
-    if (!found) {
-        hideTooltip()
-    }
+    hideTooltip()
 }
 
 
@@ -230,7 +225,6 @@ function editComment(e) {
                     comments[i][2] = newText
                 }
 
-                // сразу перерисовка
                 requestAnimationFrame(() => {
                     continueDraw({ clientX: mouse_x, clientY: mouse_y })
                 })
@@ -242,3 +236,19 @@ function editComment(e) {
 
     return false
 }
+
+
+// ==========================
+// LIVE UPDATE INPUT POSITION
+// ==========================
+window.addEventListener("mousemove", () => {
+    if (activeCommentInput) {
+        updateCommentInputPosition()
+    }
+})
+
+window.addEventListener("resize", () => {
+    if (activeCommentInput) {
+        updateCommentInputPosition()
+    }
+})

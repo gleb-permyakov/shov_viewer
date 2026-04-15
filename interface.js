@@ -426,3 +426,13 @@ resetBC.addEventListener("click", () => {
     contrastValue.value = 0
     continueDraw({clientX: mouse_x, clientY: mouse_y})
 })
+
+const globalAnnotation = document.getElementById("globalAnnotation");
+
+// загрузка из localStorage (опционально)
+globalAnnotation.value = localStorage.getItem("globalAnnotation") || "";
+
+// авто-сохранение
+globalAnnotation.addEventListener("input", () => {
+    localStorage.setItem("globalAnnotation", globalAnnotation.value);
+});
