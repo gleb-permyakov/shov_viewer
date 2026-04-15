@@ -116,6 +116,8 @@ function findPointInLine(e) {
             mouse_over_element = true
             // передаем массив без этой линии
             lines_without_hovered_element = lines.slice(0, counter).concat(lines.slice(counter+1))
+
+            element_to_add = []
         }
         counter++
     })

@@ -60,6 +60,7 @@ function findPointInShovMiddle(e) {
             // сказали, что мышь на элементе
             mouse_over_element = true
             // возвращаем значение, что трогали правую часть
+            element_to_add = []
             return 1
         }
     } else if (x < line_middle[4] / 2) {
@@ -75,6 +76,7 @@ function findPointInShovMiddle(e) {
             // сказали, что мышь на элементе
             mouse_over_element = true
             // возвращаем значение, что трогали левую часть
+            element_to_add = []
             return 2
         }
     }

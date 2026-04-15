@@ -117,6 +117,8 @@ function findPointInEllipse(e) {
             mouse_over_element = true
             // передаем массив без этой линии
             ellipses_without_hovered_element = ellipses.slice(0, counter).concat(ellipses.slice(counter+1))
+
+            element_to_add = []
         }
         counter++
     })
