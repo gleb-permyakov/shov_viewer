@@ -140,6 +140,8 @@ function findPointInRect(e) {
             mouse_over_element = true
             // передаем массив без этой линии
             rects_without_hovered_element = rects.slice(0, counter).concat(rects.slice(counter+1))
+
+            element_to_add = []
         }   
         counter++
     })

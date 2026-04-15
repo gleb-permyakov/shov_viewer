@@ -108,6 +108,8 @@ function findPointInRuler(e){
             rulers_without_hovered_element =
                 rulers.slice(0,counter)
                 .concat(rulers.slice(counter+1))
+
+            element_to_add = []
         }
 
         counter++

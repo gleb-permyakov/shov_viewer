@@ -128,6 +128,8 @@ function findPointInEllipse3(e){
             ellipses3_without_hovered_element =
                 ellipses3.slice(0,counter)
                 .concat(ellipses3.slice(counter+1))
+
+            element_to_add = []
         }
 
         counter++

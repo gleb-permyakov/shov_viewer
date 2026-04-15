@@ -201,7 +201,8 @@ function deleteElement(e) {
                 drawAllComments()
             }, 100)
             // удалить из аннотации дефект
-            delete_defect_annotation(fixed_element_data[2])
+            delete_defect_annotation(element_to_add[2])
+            console.log(element_to_add)
             redraw_defects()
         }
     }

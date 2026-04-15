@@ -5,6 +5,7 @@ element_to_add = [] // тут временно храним то, что под�
 
 fixed_element_data = [] // сюда мы фиксируем данные о том элементе, который был выбран, когда мы нажали ПКМ
 
+// для сохранения аннтоации в json
 const saveBtn = document.querySelector("#saveBtn")
 saveBtn.addEventListener("click", () => {
     createJSFileWithArrays()
@@ -44,9 +45,34 @@ async function createJSFileWithArrays() {
     }
 }
 
+// работа с кнопкой загрузки файла JSON
+const loadBtn = document.querySelector("#loadBtn")
+const annotationJSONInput = document.querySelector('#annotationJSONInput')
+loadBtn.addEventListener("click", () => {
+    annotationJSONInput.click()
+})
+
+// обработка уже загруженного файла
+annotationJSONInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const content = e.target.result;
+        loadAnnotationFromLSON(content); // передача содержимого
+    };
+
+    reader.readAsText(file); 
+});
+
+// 
+
 // функция для работы с добавлением дефектов в аннотацию
 function defectWindow() {
-    if (mouse_over_element) {
+    if (mouse_over_element && element_to_add.length > 1) {
         fixed_element_data = element_to_add
         const popup_add = document.querySelector(".popup_add_defect")
         const popup_delete = document.querySelector(".popup_delete_defect")

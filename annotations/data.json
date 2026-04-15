@@ -3,35 +3,20 @@
   "ellipses3": [],
   "lines_et": [],
   "lines": [],
-  "measureEllipses": [],
+  "measureEllipses": [
+    [
+      "yellow",
+      1,
+      752,
+      137,
+      834,
+      239,
+      0
+    ]
+  ],
   "measureEllipses3": [],
   "measureRects": [],
   "rects": [],
   "rulers": [],
-  "shov_lines": [
-    [
-      "#00008f",
-      2,
-      0,
-      733,
-      1121,
-      727
-    ],
-    [
-      "#00008f",
-      2,
-      0,
-      728,
-      1121,
-      722
-    ],
-    [
-      "#00008f",
-      2,
-      0,
-      737,
-      1121,
-      731
-    ]
-  ]
+  "shov_lines": []
 }
