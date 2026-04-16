@@ -61,14 +61,78 @@ annotationJSONInput.addEventListener("change", (event) => {
     const reader = new FileReader();
 
     reader.onload = function(e) {
-        const content = e.target.result;
-        loadAnnotationFromLSON(content); // передача содержимого
+        const text = e.target.result;
+        loadAnnotationFromLSON(text); // передача содержимого
     };
+
+    annotationJSONInput.value = "";
 
     reader.readAsText(file); 
 });
 
-// 
+// функция для работы с контентом загруженного json
+function loadAnnotationFromLSON(text) {
+    try {
+        const data = JSON.parse(text); // парсим JSON
+
+        // загрузили все эллипсы
+        (data["ellipses"]).forEach(element => {
+            ellipses.push(element)
+        });
+        // загрузили все эллипсы3
+        (data["ellipses3"]).forEach(element => {
+            ellipses3.push(element)
+        });
+        // загрузили эталонную линию
+        (data["lines_et"]).forEach(element => {
+            lines_et.push(element)
+        });
+        // загрузили все линии
+        (data["lines"]).forEach(element => {
+            lines.push(element)
+        });
+        // загрузили все измерительные эллипсы
+        (data["measureEllipses"]).forEach(element => {
+            measureEllipses.push(element)
+        });
+        // загрузили все измерительные эллипсы 3
+        (data["measureEllipses3"]).forEach(element => {
+            measureEllipses3.push(element)
+        });
+        // загрузили все измерительные прямоугольники
+        (data["measureRects"]).forEach(element => {
+            measureRects.push(element)
+        });
+        // загрузили все прямоугольники
+        (data["rects"]).forEach(element => {
+            rects.push(element)
+        });
+        // загрузили все линейки
+        (data["rulers"]).forEach(element => {
+            rulers.push(element)
+        });
+        // загрузили шов
+        (data["shov_lines"]).forEach(element => {
+            shov_lines.push(element)
+        });
+
+        drawAllShovLines()
+        drawAllLines()
+        drawAllLinesEt()
+        drawAllRulers()
+        drawAllMeasureEllipses()
+        drawAllRects()
+        drawAllEllipses()
+        drawAllEllipses3()
+        drawAllMeasureEllipses3()
+        drawAllMeasureRects()
+        drawAllComments()
+        
+
+    } catch (error) {
+        console.error("Ошибка парсинга JSON:", error);
+    }
+}
 
 // функция для работы с добавлением дефектов в аннотацию
 function defectWindow() {
@@ -147,7 +211,6 @@ function redraw_defects() {
     const defects_div = document.querySelector(".defects")
     defects_div.innerHTML = ""
     new_inner = ""
-    console.log(defects)
     defects.forEach(element => {
         new_inner += '<div class="defect" data-defect-id="' + element[2] + '" data-figure="' + element[0] + '"><p>' + element[3] + '</p><p>' + (element[1][0]).toFixed(2) + ' x ' + (element[1][1]).toFixed(2) + ' мм</p></div>'
     });

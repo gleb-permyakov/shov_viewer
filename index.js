@@ -8,7 +8,7 @@ const deleteBtn = document.querySelector('#deleteBtn')
 let original_image
 let isDrawing = false
 let len_etalon = 0
-let mmToPx_ratio = 1
+let mmToPx_ratio = 0.0423
 let brightness = 0
 let contrast = 0
 
