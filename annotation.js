@@ -343,3 +343,16 @@ function redraw() {
     drawAllMeasureEllipses3()
     drawAllMeasureRects()
 }
+
+
+
+// Все для работы с сохранением аннотаций в форме
+const inputs = document.querySelectorAll("input")
+
+inputs.forEach(input => {
+    input.style.width = Math.max(input.value.length, input.placeholder.length) + 'ch';
+    input.addEventListener('input', () => {
+        input.style.width = Math.max(input.value.length, input.placeholder.length) + 'ch';
+    });
+});
+
