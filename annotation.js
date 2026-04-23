@@ -7,8 +7,11 @@ fixed_element_data = [] // сюда мы фиксируем данные о то
 
 // для сохранения аннтоации в json
 const saveBtn = document.querySelector("#saveBtn")
+const popup_save = document.querySelector(".popup_save")
 saveBtn.addEventListener("click", () => {
     createJSFileWithArrays()
+    createTableDefects()
+    popup_save.classList.add("show_save_popup")
 })
 
 // Функция для создания JS файла с массивами
@@ -212,7 +215,7 @@ function redraw_defects() {
     defects_div.innerHTML = ""
     new_inner = ""
     defects.forEach(element => {
-        new_inner += '<div class="defect" data-defect-id="' + element[2] + '" data-figure="' + element[0] + '"><p>' + element[3] + '</p><p>' + (element[1][0]).toFixed(2) + ' x ' + (element[1][1]).toFixed(2) + ' мм</p></div>'
+        new_inner += '<div class="defect" data-defect-id="' + element[2] + '" data-figure="' + element[0] + '"><p>' + element[3] + '</p><p>' + Math.max((element[1][0]).toFixed(2), (element[1][1]).toFixed(2)) + ' × ' + Math.min((element[1][0]).toFixed(2), (element[1][1]).toFixed(2)) + ' мм</p></div>'
     });
     defects_div.innerHTML = new_inner
     // теперь выставляем обработчик на наведение мыши
@@ -346,8 +349,8 @@ function redraw() {
 
 
 
-// Все для работы с сохранением аннотаций в форме
-const inputs = document.querySelectorAll("input")
+// ФОРМА СОХРАНЕНИЯ АННОТАЦИИ И ПРОТОКОЛА
+const inputs = document.querySelectorAll(".popup_save_input")
 
 inputs.forEach(input => {
     input.style.width = Math.max(input.value.length, input.placeholder.length) + 'ch';
@@ -356,3 +359,122 @@ inputs.forEach(input => {
     });
 });
 
+const btn_save_annotation_json = document.querySelector("#btn_save_annotation_json")
+const btn_save_protocol_docx = document.querySelector("#btn_save_protocol_docx")
+const btn_close_popup_save = document.querySelector("#btn_close_popup_save")
+
+btn_close_popup_save.addEventListener('click', () => {
+    popup_save.classList.remove("show_save_popup")
+})
+
+btn_save_annotation_json.addEventListener('click', () => {
+    // скачать документ с сервера
+})
+
+btn_save_protocol_docx.addEventListener('click', () => {
+    // 
+})
+
+// генерация таблицы дефектов в попапе 
+function createTableDefects() {
+    arr_defects_add = []
+    pora = {}
+    shlak = {}
+    defects.forEach(defect => {
+        sizes = defect[1]
+        name = defect[3]
+        // правильно записываем все диаметры пор
+        if (name == "Пора") {
+            d = Math.max(sizes[0], sizes[1])
+            d = normalize_mm(d)
+            abbr = "" + d
+            if (!pora[abbr]) {
+                pora[abbr] = 1
+            } else {
+                pora[abbr] += 1
+            }
+        }
+        // теперь шлаковые включения
+        if (name == "Шлаковые включения") {
+            d_len = normalize_mm(sizes[0])
+            d_width = normalize_mm(sizes[1])
+            abbr = "" + Math.max(d_len, d_width) + "×" + Math.min(d_len, d_width)
+            if (!shlak[abbr]) {
+                shlak[abbr] = 1
+            } else {
+                shlak[abbr] += 1
+            }
+        }
+    });
+    // фильтруем записи по порам
+    for (let key of Object.keys(pora)) {
+        arr_defects_add.push((pora[key] + "П" + key).replaceAll(".", ",").replace("1", ""))
+    }
+    // фильтруем записи по шлаковым включениям
+    for (let key of Object.keys(shlak)) {
+        arr_defects_add.push((shlak[key] + "ШК" + key).replaceAll(".", ",").replace("1", ""))
+    }
+    // генерация таблицы
+    const table = document.getElementById("defectsTable")
+    table.innerHTML = ""
+    // заголовки
+    const headers = ["Тип и номер стыка по сварочной схеме","№ и размеры снимка, мм",
+        "Клеймо сварщика","Чувств. контроля по НТД, мм","Чувстви-тельность контроля, мм",
+        "Обнаруженные дефекты","Процент от толщины стенки","Сумм. длина на 100,[300] мм снимка, стык {}, мм",
+        "Оценка стыка","Объём контроля, %","Примечание"]
+    function addHeader(table) {
+        const tr = document.createElement("tr")
+        headers.forEach(h => {
+            const td = document.createElement("td")
+            td.textContent = h
+            tr.appendChild(td)
+        })
+        table.appendChild(tr)
+    }
+    addHeader(table)
+    // сама таблица
+    arr_defects_add.forEach(defect => {
+        const tr = document.createElement("tr")
+        for (i = 0; i < 11; i++) {
+            const td = document.createElement("td")
+            td.textContent = " "
+            if (i == 5) {
+                td.textContent = defect
+            }
+            tr.appendChild(td)
+        }
+        table.appendChild(tr)
+    })
+    console.log(arr_defects_add)
+}
+
+// 0,2; 0,3; 0,4; 0,5; 0,6; 0,8; 1,0; 1,2; 1,5; 2,0; 2,5; 3,0 мм
+function normalize_mm(len_mm) {
+    if (len_mm < 0.2) return 0.2 
+    
+    if (len_mm < 0.25) return 0.2
+    
+    if (len_mm < 0.35) return 0.3
+    
+    if (len_mm < 0.45) return 0.4
+    
+    if (len_mm < 0.55) return 0.5
+    
+    if (len_mm < 0.7) return 0.6
+    
+    if (len_mm < 0.9) return 0.8
+    
+    if (len_mm < 1.1) return 1.0
+    
+    if (len_mm < 1.35) return 1.2
+    
+    if (len_mm < 1.75) return 1.5
+    
+    if (len_mm < 2.25) return 2.0
+    
+    if (len_mm < 2.75) return 2.5
+    
+    if (len_mm < 3.5) return 3.0
+    
+    if (len_mm > 3.5) return Math.round(len_mm)
+}

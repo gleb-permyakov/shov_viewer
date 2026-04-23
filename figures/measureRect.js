@@ -160,7 +160,7 @@ function findPointInMeasureRect(e) {
                 .concat(measureRects.slice(counter + 1))
 
             // для добавления дефекта
-            element_to_add = ["rect", [Math.abs(right-left), Math.abs(top-bottom)], rect[6]]
+            element_to_add = ["rect", [Math.abs(right-left) * mmToPx_ratio, Math.abs(top-bottom) * mmToPx_ratio], rect[6]]
         }
 
         counter++

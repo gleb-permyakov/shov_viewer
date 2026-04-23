@@ -120,18 +120,18 @@
         </div>
 
         <div class="annotation-right">
-            <textarea id="globalAnnotation" maxlength="3000"></textarea>
+            <textarea id="globalAnnotation" maxlength="3000" placeholder="Комментарий..."></textarea>
         </div>
 
     </div>
 
     <div class="popup_add_defect">
         <p>Добавить дефект</p>
-        <select name="defects" id="defect_selector">
+        <select name="defects" id="defect_selector" class="popup_selector">
             <option value="Пора">Пора</option>
             <option value="Трещина">Трещина</option>
             <option value="Непровар">Непровар</option>
-            <option value="Шлак">Шлак</option>
+            <option value="Шлаковые включения">Шлаковые включения</option>
         </select>
         <div class="popup_btns">
             <div class="btn_ok popup_btn">Готово</div>
@@ -141,15 +141,15 @@
 
     <div class="popup_delete_defect">
         <p>Редактировать дефект</p>
-        <select name="defects" id="defect_selector2">
+        <select name="defects" id="defect_selector2" class="popup_selector">
             <option value="Пора">Пора</option>
             <option value="Трещина">Трещина</option>
             <option value="Непровар">Непровар</option>
-            <option value="Шлак">Шлак</option>
+            <option value="Шлаковые включения">Шлаковые включения</option>
         </select>
         <div class="popup_btns">
             <div class="btn_ok2 popup_btn">Готово</div>
-            <div class="btn_cancel2 popup_btn">Отмена</div>
+            <div class="btn_cancel2 popup_btn" style="margin: 0 10px;">Отмена</div>
             <div class="btn_delete2 popup_btn">Удалить</div>
         </div>
     </div>
@@ -158,14 +158,14 @@
         <p>Лаборатория неразрушающего контроля лабораторного комплекса «ТехноПрогресс»</p>
         <br>
         <p class="center">Протокол №1 от 20.04.2026 г.</p>
-        <p class="center">проверки сварных стыков <input type="text" id="object_name" value="газопровода"> радиографиечским методом</p>
+        <p class="center">проверки сварных стыков <input type="text" id="object_name" value="газопровода" class="popup_save_input"> радиографиечским методом</p>
         <br>
         <p>
-            Произведена проверка сварных стыков <input type="text" id="object_name_2" value="магистрального трубопровода высокого давления">, стоящего по адресу:
+            Произведена проверка сварных стыков <input type="text" id="object_name_2" value="магистрального трубопровода высокого давления" class="popup_save_input">, стоящего по адресу:
             <br><input type="text" id="address" value="">.
         </p>
         <br>
-        <p><input type="text" id="made_of" value="Газопровод сварен из труб сваркой P с наружным диаметром 820мм, толщиной стенки 10мм." style="text-align:left"></p>
+        <p><input type="text" id="made_of" value="Газопровод сварен из труб сваркой P с наружным диаметром 820мм, толщиной стенки 10мм." style="text-align:left" class="popup_save_input"></p>
         <br>
         <p>
             Оценка качества сварных соединений проводилась в соответствии с требованиями ГОСТ 23055-78.
@@ -174,21 +174,30 @@
         <br>
         <p class="center">Результаты проверки</p>
         <br>
-        <div class="defects_table"></div>
+        <table id="defectsTable"></table>
         <br>
-        <p>Заключение лабаратории: <input type="text" id="lab_conclusion" style="min-width: 250px !important; text-align: left;"></p>
+        <p>Заключение лабаратории: <input type="text" id="lab_conclusion" style="min-width: 250px !important; text-align: left;" class="popup_save_input"></p>
         <br>
-        <div class="container_string_protocol">
-            <p>Начальник лабаратории <input type="text" id="chief_name" placeholder="Иванов И.И." style="width: 15ch !important;"></p>
-            <span style="text-decoration: underline; color: gray;">(подпись)</span>
+        <div class="container_names_and_date">
+            <div class="names">
+                <div class="container_string_protocol">
+                    <p>Начальник лабаратории <input type="text" id="chief_name" placeholder="Иванов И.И." style="width: 15ch !important;" class="popup_save_input"></p>
+                    <span style="text-decoration: underline; color: gray;">(подпись)</span>
+                </div>
+                <br>
+                <div class="container_string_protocol">
+                    <p>Дефектоскопист <input type="text" id="inspector_name" placeholder="Петров П.П." style="width: 15ch !important;" class="popup_save_input"></p>
+                    <span style="text-decoration: underline; color: gray;">(подпись)</span>
+                </div> 
+            </div>
+            <div class="annotation_date_btm">20.04.2026 г.</div>
         </div>
-        <br>
-        <div class="container_string_protocol">
-            <p>Дефектоскопист <input type="text" id="inspector_name" placeholder="Петров П.П." style="width: 15ch !important;"></p>
-            <span style="text-decoration: underline; color: gray;">(подпись)</span>
-            <span style="position: absolute; bottom: 15px; right: 500px">20.04.2026 г.</span>
-        </div> 
-
+        <br><br>
+        <div class="popup_save_btns">
+            <button id="btn_save_annotation_json" class="popup_save_btn">Сохранить аннотацию</button>
+            <button id="btn_save_protocol_docx" class="popup_save_btn">Сохранить протокол (DOCX)</button>
+            <button id="btn_close_popup_save" class="popup_save_btn">Закрыть</button>
+        </div>  
     </div>
 
     <!-- JS scripts -->

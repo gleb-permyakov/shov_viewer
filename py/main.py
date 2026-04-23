@@ -176,7 +176,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
             data = json.loads(self.rfile.read(length))
             
             # Сохраняем в файл
-            with open('annotations/data.json', 'w', encoding='utf-8') as f:
+            with open('annotations/annotation.json', 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
             
             # Отправляем ответ

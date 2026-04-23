@@ -123,7 +123,7 @@ function findPointInMeasureEllipse(e) {
                 .concat(measureEllipses.slice(counter+1))
 
             // для добавления дефекта
-            element_to_add = ["ellipse", [Math.abs(rx*2), Math.abs(ry*2)], el[6]]
+            element_to_add = ["ellipse", [Math.abs(rx*2) * mmToPx_ratio, Math.abs(ry*2) * mmToPx_ratio], el[6]]
         }
 
         counter++
