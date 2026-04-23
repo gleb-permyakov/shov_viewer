@@ -28,8 +28,9 @@
     background: #aaa;
 }
 
-html {
+html, .annotation {
     background-color: #3887c7;
+    /* background-color: #849bcc; */
 }
 
 .inDev {
@@ -321,7 +322,6 @@ body {
     /* height: 220px; */
     display: flex;
     border-top: 1px solid rgba(0,0,0,0.3);
-    background: #3887c7; /* ВАЖНО: теперь как html */
     z-index: 1000;
 }
 

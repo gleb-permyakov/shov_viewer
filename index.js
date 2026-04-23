@@ -8,10 +8,9 @@ const deleteBtn = document.querySelector('#deleteBtn')
 let original_image
 let isDrawing = false
 let len_etalon = 0
-let mmToPx_ratio = 0.0423
+let mmToPx_ratio = (25.4 / 800)
 let brightness = 0
 let contrast = 0
-
 
 // для удаления элементов
 lines_without_hovered_element = []
@@ -209,7 +208,14 @@ function deleteElement(e) {
 }
 
 // MOUSE_MOVE
-// процесс рисования и постоянной перерисовки канваса
+// процесс рисования и перерисовки канваса
+// блокируем выполнение функции, если последний раз она выполнялась ранее, чем delay мс назад
+let lock_updating_canvas = false
+let delay = 300
+// снятие блокировки
+setInterval(() => {
+    lock_updating_canvas = false
+}, delay)
 function continueDraw(e) {
     // надо, чтобы по дефолту мышь не перекрывала объекты и не было выбранных объектов
     mouse_over_element = false
@@ -222,53 +228,64 @@ function continueDraw(e) {
     measureEllipses3_without_hovered_element = measureEllipses3
     rulers_without_hovered_element = rulers
     lines_et_without_hovered_element = lines_et
-    
-    
-    // отрисовываем все время 
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     //применяем фильтр ТОЛЬКО к изображению
     ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
 
-    if (original_image) {
-        ctx.drawImage(original_image, 0, 0)
-    }
-
     //сбрасываем фильтр, чтобы фигуры не искажались
     ctx.filter = "none"  
 
-    drawAllShovLines()
-    drawAllLines()
-    drawAllLinesEt()
-    drawAllRulers()
-    drawAllMeasureEllipses()
-    drawAllRects()
-    drawAllEllipses()
-    drawAllEllipses3()
-    drawAllMeasureEllipses3()
-    drawAllMeasureRects()
-    drawAllComments()
+    function updating_canvas(do_it_right_now = false) {
+        if (lock_updating_canvas && !do_it_right_now) return
+        lock_updating_canvas = true
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        if (original_image) {
+            ctx.drawImage(original_image, 0, 0)
+        }
+
+        drawAllShovLines()
+        drawAllLines()
+        drawAllLinesEt()
+        drawAllRulers()
+        drawAllMeasureEllipses()
+        drawAllRects()
+        drawAllEllipses()
+        drawAllEllipses3()
+        drawAllMeasureEllipses3()
+        drawAllMeasureRects()
+        drawAllComments()
+    }
+
+    updating_canvas()
     
     // Рисуем текущую фигуру только если процесс рисования активен
     let tool = window.currentTool
     if (tool == "line") {
+        updating_canvas(true)
         drawingLine(e)
     } else if (tool == "rectangle") {
+        updating_canvas(true)
         drawingRect(e)
     } else if (tool == "ellipse") {
+        updating_canvas(true)
         drawingEllipse(e)
     } else if (tool == "line_etalon") {
+        updating_canvas(true)
         drawingLineEt(e)
     } else if (tool == "ruler") {
+        updating_canvas(true)
         drawingRuler(e)
     } else if (tool == "measureRect") {
+        updating_canvas(true)
         drawingMeasureRect(e)
     } else if (tool == "measureEllipse") {
+        updating_canvas(true)
         drawingMeasureEllipse(e)
     } 
 }
 // поиск точки в фигурах
 function findPointInFigures(e) {
+    // поиск точек на фигурах
     findPointInLine(e)
     findPointInRect(e)
     findPointInEllipse(e)

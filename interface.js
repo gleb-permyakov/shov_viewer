@@ -30,9 +30,9 @@ sizeSlider.addEventListener("change", () => {
 // МАСШТАБИРОВАНИЕ
 // Переменные для масштабирования
 let zoomLevel = 1;
-const ZOOM_STEP = 0.25;
-const MAX_ZOOM = 6;
-const MIN_ZOOM = 1;
+const ZOOM_STEP = 0.1;
+const MAX_ZOOM = 10;
+const MIN_ZOOM = 0.1;
 // Получаем элементы управления масштабом
 const zoomInBtn = document.getElementById('zoomIn');
 const zoomOutBtn = document.getElementById('zoomOut');
