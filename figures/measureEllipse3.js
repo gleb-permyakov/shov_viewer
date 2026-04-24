@@ -93,8 +93,8 @@ function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.textBaseline = "bottom"
 
     const offsetBig = 17
-    ctx.strokeText((a*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -b - offsetBig)
-    ctx.fillText((a*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -b - offsetBig)
+    ctx.strokeText((a*2*mmToPx_ratio).toFixed(2), 0, -b - offsetBig)
+    ctx.fillText((a*2*mmToPx_ratio).toFixed(2), 0, -b - offsetBig)
     ctx.restore()
 
     // ======= Малая ось =======
@@ -111,8 +111,8 @@ function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.textBaseline = "bottom"
 
     const offsetSmall = 27
-    ctx.strokeText((b*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -a - offsetSmall)
-    ctx.fillText((b*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -a - offsetSmall)
+    ctx.strokeText((b*2*mmToPx_ratio).toFixed(2), 0, -a - offsetSmall)
+    ctx.fillText((b*2*mmToPx_ratio).toFixed(2), 0, -a - offsetSmall)
     ctx.restore()
 
     ctx.restore()

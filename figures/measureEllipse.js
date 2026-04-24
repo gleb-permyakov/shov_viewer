@@ -69,8 +69,8 @@ function measureEllipseEnd(e) {
 
 // рисуем размеры эллипса (ширина и высота)
 function drawEllipseDimensions(x1, y1, x2, y2) {
-    const width = Math.abs(x2 - x1) * mmToPx_ratio * unitFactor
-    const height = Math.abs(y2 - y1) * mmToPx_ratio * unitFactor
+    const width = Math.abs(x2 - x1) * mmToPx_ratio
+    const height = Math.abs(y2 - y1) * mmToPx_ratio
 
     ctx.font = "14px Arial"
     ctx.fillStyle = "yellow"

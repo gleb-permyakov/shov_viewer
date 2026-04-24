@@ -35,7 +35,7 @@ function drawingRuler(e) {
 
     const dx = x - startX
     const dy = y - startY
-    const length = Math.sqrt(dx * dx + dy * dy) * mmToPx_ratio * unitFactor
+    const length = Math.sqrt(dx * dx + dy * dy) * mmToPx_ratio 
 
     drawLengthText(startX, startY, x, y, length)
 }
@@ -78,7 +78,7 @@ function drawAllRulers() {
 
         const dx = x2 - x1
         const dy = y2 - y1
-        const length = Math.sqrt(dx * dx + dy * dy) * mmToPx_ratio * unitFactor
+        const length = Math.sqrt(dx * dx + dy * dy) * mmToPx_ratio 
 
         drawLengthText(x1, y1, x2, y2, length)
     })

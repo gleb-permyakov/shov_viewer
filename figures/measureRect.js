@@ -89,8 +89,8 @@ function drawAllMeasureRects() {
 // ==========================
 function drawRectDimensions(x, y, widthPx, heightPx) {
 
-    const width = Math.abs(widthPx) * mmToPx_ratio * unitFactor
-    const height = Math.abs(heightPx) * mmToPx_ratio * unitFactor
+    const width = Math.abs(widthPx) * mmToPx_ratio
+    const height = Math.abs(heightPx) * mmToPx_ratio
 
     ctx.font = "14px Arial"
     ctx.fillStyle = "yellow"

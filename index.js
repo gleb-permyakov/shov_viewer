@@ -22,6 +22,7 @@ ellipses_without_hovered_element = []
 measureRects_without_hovered_element = []
 measureEllipses_without_hovered_element = []
 measureEllipses3_without_hovered_element = []
+comments_without_hovered_element = []
 mouse_over_element = false
 
 // задаем параметры для работы со швом
@@ -170,6 +171,7 @@ function deleteElement(e) {
             if (original_image) {
                 ctx.drawImage(original_image, 0, 0)
             }  
+            comments = comments_without_hovered_element
             lines = lines_without_hovered_element
             rects = rects_without_hovered_element
             ellipses = ellipses_without_hovered_element
@@ -235,6 +237,7 @@ function continueDraw(e) {
     measureEllipses3_without_hovered_element = measureEllipses3
     rulers_without_hovered_element = rulers
     lines_et_without_hovered_element = lines_et
+    comments_without_hovered_element = comments
 
     //применяем фильтр ТОЛЬКО к изображению
     ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
@@ -306,7 +309,7 @@ function findPointInFigures(e) {
     findPointInMeasureEllipse3(e)
     findPointInShovMiddle(e)
     findPointInShovBottom(e)
-    findCommentHover(e)
+    findPointInComments(e)
 }
 // двигать угол шва
 function move_shov(e) {
