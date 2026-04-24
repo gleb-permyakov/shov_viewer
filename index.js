@@ -105,10 +105,17 @@ canvas.addEventListener("mousedown", (e) => {
         defectWindow()
         return; // не запускаем рисование
     }
+    deleteElement(e);
+
+    startDrag(e);
+
+    if (isDragging) {
+        return
+    }
     
+
     // левая кнопка - рисование
     startDraw(e);
-    deleteElement(e);
 
     // для управления швом
     mouse_down = true
@@ -117,8 +124,6 @@ canvas.addEventListener("mousedown", (e) => {
     mouse_y = coords.y
 });
 
-// canvas.addEventListener("mousedown", startDraw)
-// canvas.addEventListener("mousedown", deleteElement)
 canvas.addEventListener("mousemove", continueDraw)
 canvas.addEventListener("mousemove", findPointInFigures)
 canvas.addEventListener("mousemove", move_shov)
@@ -126,6 +131,8 @@ canvas.addEventListener("mousemove", move_shov_width)
 canvas.addEventListener("mousemove", update_mouse_coords) // обязательно в конце после всех других обработчиков мувов
 canvas.addEventListener("mouseout", stopDraw)
 canvas.addEventListener("mouseup", stopDraw)
+canvas.addEventListener("mousemove", onDrag)
+canvas.addEventListener("mouseup", endDrag)
 
 // MOUSE_DOWN
 // отрисовка элемента
@@ -285,6 +292,8 @@ function continueDraw(e) {
 }
 // поиск точки в фигурах
 function findPointInFigures(e) {
+    if (isDragging) return
+
     // поиск точек на фигурах
     findPointInLine(e)
     findPointInRect(e)

@@ -169,16 +169,3 @@ function findPointInMeasureEllipse3(e) {
         counter++
     })
 }
-
-// // завершение на mouseup          функция нигде не используется т.к. устарела
-// function measureEllipse3End(e) {
-//     if(actual_measureEllipse3_data.length === 4 || actual_measureEllipse3_data.length === 6) {
-//         const coords = getCanvasCoords(e)
-//         console.log(measure_id)
-//         actual_measureEllipse3_data.push(coords.x, coords.y, measure_id) 
-//         measure_id += 1
-//         measureEllipses3.push(actual_measureEllipse3_data)
-//         points_measure3 = []
-//         measureEllipse3_status = 1
-//     }
-// }
