@@ -1,5 +1,7 @@
 // получаем элементы
 const viewer = document.querySelector('.viewer')
+const canvas_photo = document.getElementById('canvas_photo')
+const ctx_photo = canvas_photo.getContext('2d')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const fileInput = document.getElementById('fileInput')
@@ -11,6 +13,8 @@ let len_etalon = 0
 let mmToPx_ratio = (25.4 / 800)
 let brightness = 0
 let contrast = 0
+
+let delay = 300
 
 // для удаления элементов
 lines_without_hovered_element = []
@@ -81,19 +85,42 @@ fileInput.addEventListener('change', function(e) {
             }
             
             // 4. Устанавливаем РЕАЛЬНЫЙ размер canvas = размеру изображения
+            canvas_photo.width = img.width  // Оригинальная ширина
+            canvas_photo.height = img.height // Оригинальная высота
+
             canvas.width = img.width  // Оригинальная ширина
             canvas.height = img.height // Оригинальная высота
+
+            // динамичный delay
+            if (canvas.width * canvas.height > 8000000) {
+                delay = 300
+            } else {
+                delay = 1
+            }
             
             // 5. Рисуем изображение в полном качестве
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-            ctx.drawImage(img, 0, 0)
+            // ctx.clearRect(0, 0, canvas.width, canvas.height)
+            // ctx.drawImage(img, 0, 0)
+
+            ctx_photo.clearRect(0, 0, canvas.width, canvas.height)
+            ctx_photo.drawImage(img, 0, 0)
             
             // 6. Масштабируем ОТОБРАЖЕНИЕ через CSS
+            canvas_photo.style.width = displayWidth + 'px'
+            canvas_photo.style.height = displayHeight + 'px'
             canvas.style.width = displayWidth + 'px'
             canvas.style.height = displayHeight + 'px'
 
+            // ставим в центр
+            canvas_container = document.querySelector(".canvas-container")
+            canvas_photo.style.left = canvas_container.offsetWidth / 2 - canvas_photo.offsetWidth / 2 + 'px'
+            canvas.style.left = canvas_container.offsetWidth / 2 - canvas.offsetWidth / 2 + 'px'
+            console.log(canvas.style.left)
+
             // подсохраняем оригинальную картинку
             original_image = img
+
+            setCanvases(0, 0)
         }
         img.src = event.target.result
     }
@@ -211,7 +238,6 @@ function deleteElement(e) {
 // процесс рисования и перерисовки канваса
 // блокируем выполнение функции, если последний раз она выполнялась ранее, чем delay мс назад
 let lock_updating_canvas = false
-let delay = 300
 // снятие блокировки
 setInterval(() => {
     lock_updating_canvas = false
@@ -227,21 +253,23 @@ function continueDraw(e) {
     measureEllipses_without_hovered_element = measureEllipses
     measureEllipses3_without_hovered_element = measureEllipses3
     rulers_without_hovered_element = rulers
-    lines_et_without_hovered_element = lines_et
-
-    //применяем фильтр ТОЛЬКО к изображению
-    ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
-
-    //сбрасываем фильтр, чтобы фигуры не искажались
-    ctx.filter = "none"  
+    lines_et_without_hovered_element = lines_et  
 
     function updating_canvas(do_it_right_now = false) {
         if (lock_updating_canvas && !do_it_right_now) return
         lock_updating_canvas = true
+
         ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+        //применяем фильтр ТОЛЬКО к изображению
+        ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
+
         if (original_image) {
-            ctx.drawImage(original_image, 0, 0)
+            // ctx.drawImage(original_image, 0, 0)
         }
+
+        //сбрасываем фильтр, чтобы фигуры не искажались
+        ctx.filter = "none"
 
         drawAllShovLines()
         drawAllLines()

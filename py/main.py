@@ -35,10 +35,6 @@ def get_pic2(path_img, accuracy):
     base_img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
     height, width, _ = img.shape
-
-    # Увеличение контраста и яркости
-    img = cv2.convertScaleAbs(img, alpha=1.5, beta=0) 
-    img = cv2.add(img, 150)  
  
     # Самое главное - brightness_matrix, с ней мы дальше работаем
     brightness_matrix = task.get_brightness_matrix(img)
@@ -50,6 +46,29 @@ def get_pic2(path_img, accuracy):
             sum_bright += float(j)
     # Среднее значение
     middle = sum_bright / (width * height)
+
+    # Увеличение яркости и контрастности в зависимости от того насколько яркая картинка сейчас
+    print(middle)
+    if middle > 0.25:
+        img = cv2.add(img, -100)  
+        img = cv2.convertScaleAbs(img, alpha=3, beta=0)  
+        img = cv2.convertScaleAbs(img, alpha=3, beta=0)
+    else:
+        img = cv2.convertScaleAbs(img, alpha=2, beta=0)  
+        img = cv2.convertScaleAbs(img, alpha=2, beta=0)
+
+    # ============ переделываем занво матрицу освещенности после обработки
+    # Матрица освещённости
+    brightness_matrix = task.get_brightness_matrix(img)
+
+    # Подсчет среднего значения освещённости фона
+    sum_bright = 0
+    for i in range(height):
+        for j in brightness_matrix[i]:
+            sum_bright += float(j)
+    # Среднее значение
+    middle = sum_bright / (width * height)
+    # ============ ///// переделываем занво матрицу освещенности после обработки
 
     # Транспонирование матрицы снимка
     trans_brightness_matrix = [[0 for _ in range(height)] for _ in range(width)]
@@ -257,7 +276,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
                         self.end_headers()
 
 
-                        coords = get_pic2(str(filepath), 1)
+                        coords = get_pic2(str(filepath), 2)
                         
                         response = {
                             'status': 'success',

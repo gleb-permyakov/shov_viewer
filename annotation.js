@@ -322,7 +322,8 @@ function delete_defect_annotation(m_id) {
 
 // перерисовать без подсвечивания
 function redraw() {
-    // отрисовываем все время 
+    // отрисовываем все время
+    console.log("here 111") 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     //применяем фильтр ТОЛЬКО к изображению
