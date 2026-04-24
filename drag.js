@@ -58,6 +58,27 @@ function startDrag(e) {
         isDragging = true
         activeFigure = rectBody
         dragState = "measureRect-move"
+        return
+    }
+
+    // ============================
+    // MEASURE ELLIPSE (NEW)
+    // ============================
+    const ellipseHandle = findMeasureEllipseHandle(coords)
+    if (ellipseHandle) {
+        isDragging = true
+        activeFigure = ellipseHandle.index
+        activeHandle = ellipseHandle.handle
+        dragState = "measureEllipse-handle"
+        return
+    }
+
+    const ellipseBody = findMeasureEllipseBody(coords)
+    if (ellipseBody !== null) {
+        isDragging = true
+        activeFigure = ellipseBody
+        dragState = "measureEllipse-move"
+        return
     }
 }
 
@@ -91,7 +112,6 @@ function onDrag(e) {
     }
 
     if (dragState === "measureRect-move") {
-
         const r = measureRects[activeFigure]
 
         r[2] += dx
@@ -100,7 +120,17 @@ function onDrag(e) {
         r[5] += dy
     }
 
-    // 🔥 ВАЖНО: обновляем lastMouse ВСЕГДА
+    // ============================
+    // MEASURE ELLIPSE (NEW)
+    // ============================
+    if (dragState === "measureEllipse-handle") {
+        moveMeasureEllipseHandle(activeFigure, activeHandle, coords.x, coords.y)
+    }
+
+    if (dragState === "measureEllipse-move") {
+        moveMeasureEllipse(activeFigure, coords.x, coords.y)
+    }
+
     lastMouse.x = coords.x
     lastMouse.y = coords.y
 

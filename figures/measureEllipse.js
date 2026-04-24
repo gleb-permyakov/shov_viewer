@@ -129,3 +129,241 @@ function findPointInMeasureEllipse(e) {
         counter++
     })
 }
+
+// ==========================
+// HOVER STATE
+// ==========================
+let hoveredMeasureEllipse = null
+
+
+// ==========================
+// HANDLE DRAW (4 AXIS POINTS)
+// ==========================
+function drawEllipseHandles(x1, y1, x2, y2) {
+    const cx = (x1 + x2) / 2
+    const cy = (y1 + y2) / 2
+
+    const rx = Math.abs(x2 - x1) / 2
+    const ry = Math.abs(y2 - y1) / 2
+
+    const size = 3
+
+    const points = [
+        [cx, cy - ry], // top
+        [cx, cy + ry], // bottom
+        [cx - rx, cy], // left
+        [cx + rx, cy]  // right
+    ]
+
+    ctx.fillStyle = "white"
+    ctx.strokeStyle = "yellow"
+    ctx.lineWidth = 1
+
+    points.forEach(p => {
+        ctx.beginPath()
+        ctx.rect(p[0] - size / 2, p[1] - size / 2, size, size)
+        ctx.fill()
+        ctx.stroke()
+    })
+}
+
+
+// ==========================
+// FIXED RENDER (WITH HOVER)
+// ==========================
+function drawAllMeasureEllipses() {
+    measureEllipses.forEach((el, i) => {
+
+        const x1 = el[2], y1 = el[3]
+        const x2 = el[4], y2 = el[5]
+
+        const cx = (x1 + x2) / 2
+        const cy = (y1 + y2) / 2
+
+        const rx = Math.abs(x2 - x1) / 2
+        const ry = Math.abs(y2 - y1) / 2
+
+        ctx.strokeStyle = el[0]
+        ctx.lineWidth = el[1]
+
+        ctx.beginPath()
+        ctx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI)
+        ctx.stroke()
+
+        drawEllipseDimensions(x1, y1, x2, y2)
+
+        // 🔥 SHOW HANDLES ONLY ON HOVER
+        if (hoveredMeasureEllipse === i) {
+            drawEllipseHandles(x1, y1, x2, y2)
+        }
+    })
+}
+
+
+// ==========================
+// HOVER HIT TEST (FIX)
+// ==========================
+function findPointInMeasureEllipse(e) {
+
+    hoveredMeasureEllipse = null
+
+    const coords = getCanvasCoords(e)
+    const x = coords.x
+    const y = coords.y
+
+    let counter = 0
+
+    measureEllipses.forEach(el => {
+        const x1 = el[2], y1 = el[3]
+        const x2 = el[4], y2 = el[5]
+
+        const cx = (x1 + x2) / 2
+        const cy = (y1 + y2) / 2
+
+        const rx = Math.abs(x2 - x1) / 2
+        const ry = Math.abs(y2 - y1) / 2
+
+        if (rx === 0 || ry === 0) {
+            counter++
+            return
+        }
+
+        const value =
+            ((x - cx) * (x - cx)) / (rx * rx) +
+            ((y - cy) * (y - cy)) / (ry * ry)
+
+        const tol = 0.2
+
+        if (value >= 1 - tol && value <= 1 + tol) {
+
+            hoveredMeasureEllipse = counter
+
+            ctx.beginPath()
+            ctx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI)
+            ctx.strokeStyle = "#fafafa"
+            ctx.lineWidth = el[1] + 1
+            ctx.stroke()
+
+            mouse_over_element = true
+
+            measureEllipses_without_hovered_element =
+                measureEllipses.slice(0, counter)
+                    .concat(measureEllipses.slice(counter + 1))
+
+            element_to_add = [
+                "ellipse",
+                [Math.abs(rx * 2) * mmToPx_ratio, Math.abs(ry * 2) * mmToPx_ratio],
+                el[6]
+            ]
+
+            drawEllipseHandles(x1, y1, x2, y2)
+        }
+
+        counter++
+    })
+}
+
+
+// ==========================
+// HANDLE HIT TEST (DRAG)
+// ==========================
+function findMeasureEllipseHandle(coords) {
+    const radius = 5
+
+    for (let i = 0; i < measureEllipses.length; i++) {
+        const el = measureEllipses[i]
+
+        const x1 = el[2], y1 = el[3]
+        const x2 = el[4], y2 = el[5]
+
+        const cx = (x1 + x2) / 2
+        const cy = (y1 + y2) / 2
+
+        const rx = Math.abs(x2 - x1) / 2
+        const ry = Math.abs(y2 - y1) / 2
+
+        const handles = [
+            { name: "top", x: cx, y: cy - ry },
+            { name: "bottom", x: cx, y: cy + ry },
+            { name: "left", x: cx - rx, y: cy },
+            { name: "right", x: cx + rx, y: cy }
+        ]
+
+        for (let h of handles) {
+            if (distance(coords.x, coords.y, h.x, h.y) < radius) {
+                return { index: i, handle: h.name }
+            }
+        }
+    }
+
+    return null
+}
+
+
+// ==========================
+// BODY HIT TEST (DRAG MOVE)
+// ==========================
+function findMeasureEllipseBody(coords) {
+
+    for (let i = 0; i < measureEllipses.length; i++) {
+        const el = measureEllipses[i]
+
+        const x1 = el[2], y1 = el[3]
+        const x2 = el[4], y2 = el[5]
+
+        const cx = (x1 + x2) / 2
+        const cy = (y1 + y2) / 2
+
+        const rx = Math.abs(x2 - x1) / 2
+        const ry = Math.abs(y2 - y1) / 2
+
+        if (rx === 0 || ry === 0) continue
+
+        const dx = coords.x - cx
+        const dy = coords.y - cy
+
+        const value =
+            (dx * dx) / (rx * rx) +
+            (dy * dy) / (ry * ry)
+
+        const tol = 0.2
+
+        if (value >= 1 - tol && value <= 1 + tol) {
+            return i
+        }
+    }
+
+    return null
+}
+
+
+// ==========================
+// MOVE HANDLE
+// ==========================
+function moveMeasureEllipseHandle(index, handle, x, y) {
+    const el = measureEllipses[index]
+
+    if (handle === "left") el[2] = x
+    if (handle === "right") el[4] = x
+    if (handle === "top") el[3] = y
+    if (handle === "bottom") el[5] = y
+}
+
+
+// ==========================
+// MOVE BODY
+// ==========================
+function moveMeasureEllipse(index, x, y) {
+    const el = measureEllipses[index]
+
+    const dx = x - lastMouse.x
+    const dy = y - lastMouse.y
+
+    el[2] += dx
+    el[3] += dy
+    el[4] += dx
+    el[5] += dy
+
+    lastMouse.x = x
+    lastMouse.y = y
+}
