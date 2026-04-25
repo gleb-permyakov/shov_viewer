@@ -14,7 +14,7 @@ let mmToPx_ratio = (25.4 / 800)
 let brightness = 0
 let contrast = 0
 
-let delay = 300
+let delay = 1
 
 // для удаления элементов
 lines_without_hovered_element = []
@@ -93,7 +93,9 @@ fileInput.addEventListener('change', function(e) {
             canvas.height = img.height // Оригинальная высота
 
             // динамичный delay
+            console.log(canvas.width * canvas.height)
             if (canvas.width * canvas.height > 8000000) {
+                console.log("delay 300")
                 delay = 300
             } else {
                 delay = 1
@@ -266,10 +268,10 @@ function continueDraw(e) {
     comments_without_hovered_element = comments
 
     //применяем фильтр ТОЛЬКО к изображению
-    ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
+    // ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
 
     //сбрасываем фильтр, чтобы фигуры не искажались
-    ctx.filter = "none"  
+    // ctx.filter = "none"  
 
     function updating_canvas(do_it_right_now = false) {
         if (lock_updating_canvas && !do_it_right_now) return
@@ -278,14 +280,14 @@ function continueDraw(e) {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
         //применяем фильтр ТОЛЬКО к изображению
-        ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
+        // ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
 
         if (original_image) {
             ctx.drawImage(original_image, 0, 0)
         }
 
         //сбрасываем фильтр, чтобы фигуры не искажались
-        ctx.filter = "none"
+        // ctx.filter = "none"
 
         drawAllShovLines()
         drawAllLines()

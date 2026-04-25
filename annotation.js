@@ -3,6 +3,9 @@ measure_id = 0
 defects = [] // ["ellipse3", [длина, ширина], measure_id, "пора"], []...
 element_to_add = [] // тут временно храним то, что подсветили и добавляем
 
+// дефекты, которые пишутся в таблицу (уже аббревиатуры)
+arr_defects_add = []
+
 fixed_element_data = [] // сюда мы фиксируем данные о том элементе, который был выбран, когда мы нажали ПКМ
 
 // для сохранения аннтоации в json
@@ -373,8 +376,54 @@ btn_save_annotation_json.addEventListener('click', () => {
     window.location.href = "/download_annotation";
 })
 
-btn_save_protocol_docx.addEventListener('click', () => {
-    // 
+btn_save_protocol_docx.addEventListener('click', async (event) => {
+    // формируем json аннотацию
+    const object_name = document.querySelector("#object_name").value
+    const object_name_2 = document.querySelector("#object_name_2").value
+    const address = document.querySelector("#address").value 
+    const made_of = document.querySelector("#made_of").value
+    const lab_conclusion = document.querySelector("#lab_conclusion").value
+    const chief_name = document.querySelector("#chief_name").value
+    const inspector_name = document.querySelector("#inspector_name").value
+    data_to_json = {
+        "object_name": object_name,
+        "object_name_2": object_name_2,
+        "address": address,
+        "made_of": made_of,
+        "lab_conclusion": lab_conclusion,
+        "chief_name": chief_name,
+        "inspector_name": inspector_name,
+        "defects": arr_defects_add
+    }
+    // загружаем на сервер json
+    try {
+        const response = await fetch('/save_protocol_docx', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data_to_json)
+        });
+        
+        // получаем файл
+        const blob = await response.blob();
+
+        // создаём ссылку и скачиваем
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'protocol.docx';
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+
 })
 
 // генерация таблицы дефектов в попапе 

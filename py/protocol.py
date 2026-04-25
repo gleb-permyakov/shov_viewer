@@ -56,26 +56,23 @@ def _replace_static_placeholders(doc: Document, data: dict[str, Any]) -> None:
         
     # Заголовок протокола
     p = paragraphs[1]
-    _set_paragraph_run_text(p, 1, "№ " + data.get("protocol_no", "") + " ")
-    _set_paragraph_run_text(p, 2, "от " + data.get("protocol_date", "") + " г.")
+    _set_paragraph_run_text(p, 1, "№ " + "1" + " ")
+    _set_paragraph_run_text(p, 2, "от " + "25.04.2026" + " г.")
     _set_paragraph_run_text(p, 3, "")
     _set_paragraph_run_text(p, 4, "\nпроверки сварных стыков " + data.get("object_name", "") + " радиографическим методом" )
 
     # Адрес объекта
     p = paragraphs[2]
-    _set_paragraph_run_text(p, 1, "сварных стыков "+ "магистрального трубопровода" + ", стоящего по адресу:")
+    _set_paragraph_run_text(p, 1, "сварных стыков "+ data.get("object_name_2", "") + ", стоящего по адресу:")
     _set_paragraph_run_text(p, 2, "\n" + data.get("address", ""))
 
     # Параметры трубы
     p = paragraphs[3]
-    _set_paragraph_run_text(p, 0, "Газопровод сварен из " + data.get("welding_type", "") + ".")
+    _set_paragraph_run_text(p, 0, data.get("made_of", ""))
     _set_paragraph_run_text(p, 1, "")
     _set_paragraph_run_text(p, 2, "")
-    # _set_paragraph_run_text(p, 1, data.get("welding_type", ""))
-    # _set_paragraph_run_text(p, 3, data.get("outer_diameter_mm", ""))
-    # _set_paragraph_run_text(p, 5, data.get("wall_thickness_mm", ""))
 
-    # # 4) ГОСТы
+    # ГОСТы
     # p = paragraphs[4]
     # if data.get("quality_standard"):
     #     p.runs[1].text = str(data["quality_standard"])
@@ -99,18 +96,19 @@ def _replace_static_placeholders(doc: Document, data: dict[str, Any]) -> None:
     # Подпись дефектоскописта
     p = paragraphs[8]
     _set_paragraph_run_text(p, 0, "Дефектоскопист " + data.get("inspector_name", ""))
-    _set_paragraph_run_text(p, 11, "    " + data.get("protocol_date", ""))
+    _set_paragraph_run_text(p, 11, "    " + "25.04.2026")
 
 
 def _replace_table_header_placeholders(table, data: dict[str, Any]) -> None:
     header_cell = table.rows[0].cells[7]
     runs = header_cell.paragraphs[0].runs
 
-    if len(runs) >= 8:
-        if data.get("sum_length_basis_mm") is not None:
-            runs[4].text = str(data["sum_length_basis_mm"])
-        if data.get("sum_length_joint_label") is not None:
-            runs[7].text = str(data["sum_length_joint_label"])
+    # это на подумать
+    # if len(runs) >= 8:
+    #     if data.get("sum_length_basis_mm") is not None:
+    #         runs[4].text = str(data["sum_length_basis_mm"])
+    #     if data.get("sum_length_joint_label") is not None:
+    #         runs[7].text = str(data["sum_length_joint_label"])
 
 
 def _build_defects_table(doc: Document, defects: list[dict[str, Any]], data: dict[str, Any]) -> None:
@@ -136,17 +134,17 @@ def _build_defects_table(doc: Document, defects: list[dict[str, Any]], data: dic
 
         row = table.rows[-1]
         values = [
-            defect.get("joint_type_number", ""),
-            defect.get("image_no_and_size", ""),
-            defect.get("welder_mark", ""),
-            defect.get("control_sensitivity_ntd_mm", ""),
-            defect.get("control_sensitivity_mm", ""),
-            defect.get("defect_description", ""),
-            defect.get("percent_of_wall_thickness", ""),
-            defect.get("sum_length_per_100_or_300_mm", ""),
-            defect.get("joint_assessment", ""),
-            defect.get("control_volume_percent", ""),
-            defect.get("note", ""),
+            "",
+            "",
+            "",
+            "",
+            "",
+            defect,
+            "",
+            "",
+            "",
+            "",
+            "",
         ]
 
         for cell, value in zip(row.cells, values):
@@ -165,67 +163,67 @@ def build_protocol_doc(data: dict[str, Any], template_path: str | Path) -> Bytes
     return buffer
 
 
-if __name__ == "__main__":
-    sample_data = {
-        "protocol_no": "17",
-        "protocol_date": "20.04.2026",
-        "object_name": "газопровода",
-        "address": "г. Москва, ул. 7-я Парковая, 9/26",
-        "welding_type": "P",
-        "outer_diameter_mm": "820мм",
-        "wall_thickness_mm": "10мм",
-        "quality_standard": "23055-78",
-        "control_standard": "7512-82",
-        "lab_conclusion": "По результатам контроля дефекты занесены в таблицу ниже.",
-        "chief_name": "Пермяков Г.С.",
-        "inspector_name": "Петров П.П.",
-        "sum_length_basis_mm": "300",
-        "sum_length_joint_label": "C1-1",
-        "defects": [
-            {
-                "joint_type_number": "C1 1",
-                "image_no_and_size": "1 300x100",
-                "welder_mark": "56",
-                "control_sensitivity_ntd_mm": "0,4",
-                "control_sensitivity_mm": "0,2",
-                "defect_description": "ШК1,5х0,8",
-                "percent_of_wall_thickness": "8",
-                "sum_length_per_100_or_300_mm": "5",
-                "joint_assessment": "годен",
-                "control_volume_percent": "100",
-                "note": "Примечание 1",
-            },
-            {
-                "joint_type_number": "C1 1",
-                "image_no_and_size": "1 300x100",
-                "welder_mark": "56",
-                "control_sensitivity_ntd_mm": "0,4",
-                "control_sensitivity_mm": "0,2",
-                "defect_description": "ПШВ3х2",
-                "percent_of_wall_thickness": "20",
-                "sum_length_per_100_or_300_mm": "7",
-                "joint_assessment": "не годен",
-                "control_volume_percent": "100",
-                "note": "Примечание 2",
-            },
-            {
-                "joint_type_number": "C2 5",
-                "image_no_and_size": "2 300x100",
-                "welder_mark": "61",
-                "control_sensitivity_ntd_mm": "0,4",
-                "control_sensitivity_mm": "0,2",
-                "defect_description": "С6ПШВ2,5х0,8",
-                "percent_of_wall_thickness": "14",
-                "sum_length_per_100_or_300_mm": "4",
-                "joint_assessment": "годен",
-                "control_volume_percent": "100",
-                "note": "Примечание 3",
-            },
-        ],
-    }
+# if __name__ == "__main__":
+#     sample_data = {
+#         "protocol_no": "17",
+#         "protocol_date": "20.04.2026",
+#         "object_name": "газопровода",
+#         "address": "г. Москва, ул. 7-я Парковая, 9/26",
+#         "welding_type": "P",
+#         "outer_diameter_mm": "820мм",
+#         "wall_thickness_mm": "10мм",
+#         "quality_standard": "23055-78",
+#         "control_standard": "7512-82",
+#         "lab_conclusion": "По результатам контроля дефекты занесены в таблицу ниже.",
+#         "chief_name": "Пермяков Г.С.",
+#         "inspector_name": "Петров П.П.",
+#         "sum_length_basis_mm": "300",
+#         "sum_length_joint_label": "C1-1",
+#         "defects": [
+#             {
+#                 "joint_type_number": "C1 1",
+#                 "image_no_and_size": "1 300x100",
+#                 "welder_mark": "56",
+#                 "control_sensitivity_ntd_mm": "0,4",
+#                 "control_sensitivity_mm": "0,2",
+#                 "defect_description": "ШК1,5х0,8",
+#                 "percent_of_wall_thickness": "8",
+#                 "sum_length_per_100_or_300_mm": "5",
+#                 "joint_assessment": "годен",
+#                 "control_volume_percent": "100",
+#                 "note": "Примечание 1",
+#             },
+#             {
+#                 "joint_type_number": "C1 1",
+#                 "image_no_and_size": "1 300x100",
+#                 "welder_mark": "56",
+#                 "control_sensitivity_ntd_mm": "0,4",
+#                 "control_sensitivity_mm": "0,2",
+#                 "defect_description": "ПШВ3х2",
+#                 "percent_of_wall_thickness": "20",
+#                 "sum_length_per_100_or_300_mm": "7",
+#                 "joint_assessment": "не годен",
+#                 "control_volume_percent": "100",
+#                 "note": "Примечание 2",
+#             },
+#             {
+#                 "joint_type_number": "C2 5",
+#                 "image_no_and_size": "2 300x100",
+#                 "welder_mark": "61",
+#                 "control_sensitivity_ntd_mm": "0,4",
+#                 "control_sensitivity_mm": "0,2",
+#                 "defect_description": "С6ПШВ2,5х0,8",
+#                 "percent_of_wall_thickness": "14",
+#                 "sum_length_per_100_or_300_mm": "4",
+#                 "joint_assessment": "годен",
+#                 "control_volume_percent": "100",
+#                 "note": "Примечание 3",
+#             },
+#         ],
+#     }
 
-    template_path = Path("./py/protocol_docx.docx")
-    output = build_protocol_doc(sample_data, template_path)
+#     template_path = Path("./py/protocol_docx.docx")
+#     output = build_protocol_doc(sample_data, template_path)
 
-    with open("protocol_generated.docx", "wb") as f:
-        f.write(output.getvalue())
+#     with open("protocol_generated.docx", "wb") as f:
+#         f.write(output.getvalue())

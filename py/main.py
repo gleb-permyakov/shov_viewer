@@ -3,6 +3,8 @@ import numpy as np
 import task
 import matplotlib.pyplot as plt
 
+import protocol
+
 
 # SERVER IMPORTS
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -239,8 +241,49 @@ class SimpleHandler(BaseHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
             self.wfile.write(json.dumps({"status": "ok"}).encode())
+        elif parsed_path.path == '/save_protocol_docx':
+            self.handle_docx_request()
         else:
             self.send_error(404, "Not Found")
+
+    
+    def handle_docx_request(self):
+        try:
+            length = int(self.headers['Content-Length'])
+            data = json.loads(self.rfile.read(length))
+
+            print(data)
+
+            template_path = Path("./py/protocol_docx.docx")
+            output = protocol.build_protocol_doc(data, template_path)
+
+            with open("protocol_generated.docx", "wb") as f:
+                f.write(output.getvalue())
+
+            # путь к файлу на рабочем столе
+            filepath = Path("./protocol_generated.docx")
+
+            if not os.path.exists(filepath):
+                self.send_error(404, "DOCX not found")
+                return
+
+            with open(filepath, 'rb') as f:
+                content = f.read()
+
+            self.send_response(200)
+            self.send_header('Content-Type', 
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            self.send_header('Content-Length', str(len(content)))
+            self.send_header('Content-Disposition', 
+                'attachment; filename="protocol.docx"')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+
+            self.wfile.write(content)
+
+        except Exception as e:
+            print("Ошибка:", e)
+            self.send_error(500, str(e))
     
     
     def handle_image_upload(self):
