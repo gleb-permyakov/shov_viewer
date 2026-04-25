@@ -4,7 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Просмотрщик с рисованием</title>
-    <link rel="stylesheet" href="./style.css">    
+    <link rel="stylesheet" href="./style.css">  
+        <!-- JS scripts -->
+    <script src="interface.js" defer></script>
+    <!-- JS figures -->
+    <script src="./figures/measureRect.js" defer></script>
+    <script src="./figures/line.js" defer></script>
+    <script src="./figures/ruler.js" defer></script>
+    <script src="./figures/line_etalon.js" defer></script>
+    <script src="./figures/rectangle.js" defer></script>
+    <script src="./figures/ellipse.js" defer></script>
+    <script src="./figures/ellipse3.js" defer></script>
+    <script src="./figures/measureEllipse.js" defer></script>
+    <script src="./figures/measureEllipse3.js" defer></script>
+    <script src="./figures/shov.js" defer></script>
+    <!-- перемещение -->
+    <script src="drag.js" defer></script>
+    <!-- JS main -->
+    <script src="index.js" defer></script>
+    <!-- поисковик шва -->
+    <script src="shov_finder.js" defer></script>
+    <!-- сохранение аннотаций -->
+    <script src="annotation.js" defer></script>
+    <!-- Комментарии -->
+    <script src="./figures/comments.js" defer></script>  
 </head>
 <div id="commentTooltip"></div>
 <body >
@@ -101,22 +124,16 @@
         <div class="info">
             <div id="status">Загрузите изображение или начните рисовать</div>
         </div>
-
     </div>
-
     <div class="annotation">
-
         <div class="annotation-left">
             <div class="defects"></div>
             <div class="comments"></div>
         </div>
-
         <div class="annotation-right">
             <textarea id="globalAnnotation" maxlength="3000" placeholder="Комментарий..."></textarea>
         </div>
-
     </div>
-
     <div class="popup_add_defect">
         <p>Добавить дефект</p>
         <select name="defects" id="defect_selector" class="popup_selector">
@@ -130,7 +147,6 @@
             <div class="btn_cancel popup_btn">Отмена</div>
         </div>
     </div>
-
     <div class="popup_delete_defect">
         <p>Редактировать дефект</p>
         <select name="defects" id="defect_selector2" class="popup_selector">
@@ -145,7 +161,6 @@
             <div class="btn_delete2 popup_btn">Удалить</div>
         </div>
     </div>
-
     <div class="popup_save">
         <p>Лаборатория неразрушающего контроля лабораторного комплекса «ТехноПрогресс»</p>
         <br>
@@ -191,29 +206,5 @@
             <button id="btn_close_popup_save" class="popup_save_btn">Закрыть</button>
         </div>  
     </div>
-
-    <!-- JS scripts -->
-    <script src="interface.js" defer></script>
-    <!-- JS figures -->
-    <script src="./figures/measureRect.js" defer></script>
-    <script src="./figures/line.js" defer></script>
-    <script src="./figures/ruler.js" defer></script>
-    <script src="./figures/line_etalon.js" defer></script>
-    <script src="./figures/rectangle.js" defer></script>
-    <script src="./figures/ellipse.js" defer></script>
-    <script src="./figures/ellipse3.js" defer></script>
-    <script src="./figures/measureEllipse.js" defer></script>
-    <script src="./figures/measureEllipse3.js" defer></script>
-    <script src="./figures/shov.js" defer></script>
-    <!-- перемещение -->
-    <script src="drag.js" defer></script>
-    <!-- JS main -->
-    <script src="index.js" defer></script>
-    <!-- поисковик шва -->
-    <script src="shov_finder.js" defer></script>
-    <!-- сохранение аннотаций -->
-    <script src="annotation.js" defer></script>
-    <!-- Комментарии -->
-    <script src="./figures/comments.js" defer></script>
 </body>
 </html>
