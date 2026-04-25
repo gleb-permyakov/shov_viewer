@@ -164,6 +164,15 @@ class SimpleHandler(BaseHTTPRequestHandler):
         if path == '/':
             filepath = os.path.join(base_dir, 'index.html')
             self.serve_file(filepath, 'text/html')
+
+        # Обработка скачивания JSON аннотации
+        if path == '/download_annotation':
+            filepath = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                '../annotations',
+                'annotation.json'
+            )
+            self.serve_download(filepath, 'annotation.json')
         
         # Остальные файлы
         else:
@@ -180,6 +189,33 @@ class SimpleHandler(BaseHTTPRequestHandler):
                 self.serve_file(filepath, mime_type)
             else:
                 self.send_error(404, "Not Found")
+
+    def serve_download(self, filepath, download_name):
+        try:
+            if not os.path.exists(filepath):
+                self.send_error(404, "File not found")
+                return
+
+            with open(filepath, 'rb') as f:
+                content = f.read()
+
+            mime_type, _ = mimetypes.guess_type(filepath)
+            if mime_type is None:
+                mime_type = 'application/octet-stream'
+
+            self.send_response(200)
+            self.send_header('Content-Type', mime_type)
+            self.send_header('Content-Length', str(len(content)))
+            self.send_header(
+                'Content-Disposition',
+                f'attachment; filename="{download_name}"'
+            )
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(content)
+
+        except Exception as e:
+            self.send_error(500, f"Internal server error: {str(e)}")
     
     def do_POST(self):
         # Парсинг URL

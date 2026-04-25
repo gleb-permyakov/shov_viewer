@@ -79,11 +79,12 @@ body {
 }
 
 #canvas {
-    position: absolute;
-    left: 50%;
-    /* transform: translateX(-50%); */
+    /* position: absolute;
+    left: 50%; */
     width: 100%;
     height: 100%;
+    display: flex;
+    margin: 0 auto;
     cursor: crosshair;
     z-index: 500 !important;
 }

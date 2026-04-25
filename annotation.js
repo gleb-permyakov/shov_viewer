@@ -370,6 +370,7 @@ btn_close_popup_save.addEventListener('click', () => {
 
 btn_save_annotation_json.addEventListener('click', () => {
     // скачать документ с сервера
+    window.location.href = "/download_annotation";
 })
 
 btn_save_protocol_docx.addEventListener('click', () => {

@@ -154,14 +154,14 @@ function setCanvases(pointX, pointY) {
     // Сохраняем точку трансформации в data-атрибут
     canvas.dataset.transformOrigin = `${pointX}% ${pointY}%`;
     // и для второго канваса тоже
-    canvas_photo.dataset.transformOrigin = `${pointX}% ${pointY}%`;
+    // canvas_photo.dataset.transformOrigin = `${pointX}% ${pointY}%`;
     
     // Применяем трансформацию
     canvas.style.transformOrigin = `${pointX}% ${pointY}%`;
     canvas.style.transform = `scale(${zoomLevel})`;
     // и для второго канваса тоже
-    canvas_photo.style.transformOrigin = `${pointX}% ${pointY}%`;
-    canvas_photo.style.transform = `scale(${zoomLevel})`;
+    // canvas_photo.style.transformOrigin = `${pointX}% ${pointY}%`;
+    // canvas_photo.style.transform = `scale(${zoomLevel})`;
 
     updateCommentInputPosition()
 }
@@ -197,7 +197,7 @@ window.addEventListener('mousemove', (e) => {
         // Обновляем смещение
         console.log(canvas.width)
         canvas.style.transform = `translate(${currentX + dx}px, ${currentY + dy}px) scale(${zoomLevel})`;
-        canvas_photo.style.transform = `translate(${currentX + dx}px, ${currentY + dy}px) scale(${zoomLevel})`;
+        // canvas_photo.style.transform = `translate(${currentX + dx}px, ${currentY + dy}px) scale(${zoomLevel})`;
         updateCommentInputPosition()
 
         lastX = e.clientX;

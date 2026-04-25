@@ -1,7 +1,7 @@
 // получаем элементы
 const viewer = document.querySelector('.viewer')
-const canvas_photo = document.getElementById('canvas_photo')
-const ctx_photo = canvas_photo.getContext('2d')
+// const canvas_photo = document.getElementById('canvas_photo')
+// const ctx_photo = canvas_photo.getContext('2d')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const fileInput = document.getElementById('fileInput')
@@ -86,8 +86,8 @@ fileInput.addEventListener('change', function(e) {
             }
             
             // 4. Устанавливаем РЕАЛЬНЫЙ размер canvas = размеру изображения
-            canvas_photo.width = img.width  // Оригинальная ширина
-            canvas_photo.height = img.height // Оригинальная высота
+            // canvas_photo.width = img.width  // Оригинальная ширина
+            // canvas_photo.height = img.height // Оригинальная высота
 
             canvas.width = img.width  // Оригинальная ширина
             canvas.height = img.height // Оригинальная высота
@@ -100,23 +100,23 @@ fileInput.addEventListener('change', function(e) {
             }
             
             // 5. Рисуем изображение в полном качестве
-            // ctx.clearRect(0, 0, canvas.width, canvas.height)
-            // ctx.drawImage(img, 0, 0)
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.drawImage(img, 0, 0)
 
-            ctx_photo.clearRect(0, 0, canvas.width, canvas.height)
-            ctx_photo.drawImage(img, 0, 0)
+            // ctx_photo.clearRect(0, 0, canvas.width, canvas.height)
+            // ctx_photo.drawImage(img, 0, 0)
             
             // 6. Масштабируем ОТОБРАЖЕНИЕ через CSS
-            canvas_photo.style.width = displayWidth + 'px'
-            canvas_photo.style.height = displayHeight + 'px'
+            // canvas_photo.style.width = displayWidth + 'px'
+            // canvas_photo.style.height = displayHeight + 'px'
             canvas.style.width = displayWidth + 'px'
             canvas.style.height = displayHeight + 'px'
 
-            // ставим в центр
-            canvas_container = document.querySelector(".canvas-container")
-            canvas_photo.style.left = canvas_container.offsetWidth / 2 - canvas_photo.offsetWidth / 2 + 'px'
-            canvas.style.left = canvas_container.offsetWidth / 2 - canvas.offsetWidth / 2 + 'px'
-            console.log(canvas.style.left)
+            // // ставим в центр
+            // canvas_container = document.querySelector(".canvas-container")
+            // canvas_photo.style.left = canvas_container.offsetWidth / 2 - canvas_photo.offsetWidth / 2 + 'px'
+            // canvas.style.left = canvas_container.offsetWidth / 2 - canvas.offsetWidth / 2 + 'px'
+            // console.log(canvas.style.left)
 
             // подсохраняем оригинальную картинку
             original_image = img
@@ -281,7 +281,7 @@ function continueDraw(e) {
         ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
 
         if (original_image) {
-            // ctx.drawImage(original_image, 0, 0)
+            ctx.drawImage(original_image, 0, 0)
         }
 
         //сбрасываем фильтр, чтобы фигуры не искажались
