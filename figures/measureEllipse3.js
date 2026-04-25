@@ -93,8 +93,8 @@ function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.textBaseline = "bottom"
 
     const offsetBig = 17
-    ctx.strokeText((a*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -b - offsetBig)
-    ctx.fillText((a*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -b - offsetBig)
+    ctx.strokeText((a*2*mmToPx_ratio).toFixed(2), 0, -b - offsetBig)
+    ctx.fillText((a*2*mmToPx_ratio).toFixed(2), 0, -b - offsetBig)
     ctx.restore()
 
     // ======= Малая ось =======
@@ -111,8 +111,8 @@ function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.textBaseline = "bottom"
 
     const offsetSmall = 27
-    ctx.strokeText((b*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -a - offsetSmall)
-    ctx.fillText((b*2*mmToPx_ratio * unitFactor).toFixed(2), 0, -a - offsetSmall)
+    ctx.strokeText((b*2*mmToPx_ratio).toFixed(2), 0, -a - offsetSmall)
+    ctx.fillText((b*2*mmToPx_ratio).toFixed(2), 0, -a - offsetSmall)
     ctx.restore()
 
     ctx.restore()
@@ -169,16 +169,3 @@ function findPointInMeasureEllipse3(e) {
         counter++
     })
 }
-
-// // завершение на mouseup          функция нигде не используется т.к. устарела
-// function measureEllipse3End(e) {
-//     if(actual_measureEllipse3_data.length === 4 || actual_measureEllipse3_data.length === 6) {
-//         const coords = getCanvasCoords(e)
-//         console.log(measure_id)
-//         actual_measureEllipse3_data.push(coords.x, coords.y, measure_id) 
-//         measure_id += 1
-//         measureEllipses3.push(actual_measureEllipse3_data)
-//         points_measure3 = []
-//         measureEllipse3_status = 1
-//     }
-// }

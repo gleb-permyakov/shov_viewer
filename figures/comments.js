@@ -183,23 +183,35 @@ function hideTooltip() {
 // ==========================
 // HOVER
 // ==========================
-function findCommentHover(e) {
+function findPointInComments(e) {
     const coords = getCanvasCoords(e)
     const x = coords.x
     const y = coords.y
 
+    let counter = 0
+
     for (let c of comments) {
+
         const dx = x - c[0]
         const dy = y - c[1]
         const dist = Math.sqrt(dx * dx + dy * dy)
 
         if (dist < COMMENT_RADIUS + 2) {
-            showTooltip(c[2], c[0], c[1])
+
+            mouse_over_element = true
+
+            // 🔥 важно: совместимость с твоим delete system
+            element_to_add = ["comment", [], c[3]]
+
+            comments_without_hovered_element =
+                comments.slice(0, counter)
+                .concat(comments.slice(counter + 1))
+
             return
         }
-    }
 
-    hideTooltip()
+        counter++
+    }
 }
 
 

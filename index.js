@@ -26,6 +26,7 @@ ellipses_without_hovered_element = []
 measureRects_without_hovered_element = []
 measureEllipses_without_hovered_element = []
 measureEllipses3_without_hovered_element = []
+comments_without_hovered_element = []
 mouse_over_element = false
 
 // задаем параметры для работы со швом
@@ -132,10 +133,17 @@ canvas.addEventListener("mousedown", (e) => {
         defectWindow()
         return; // не запускаем рисование
     }
+    deleteElement(e);
+
+    startDrag(e);
+
+    if (isDragging) {
+        return
+    }
     
+
     // левая кнопка - рисование
     startDraw(e);
-    deleteElement(e);
 
     // для управления швом
     mouse_down = true
@@ -144,8 +152,6 @@ canvas.addEventListener("mousedown", (e) => {
     mouse_y = coords.y
 });
 
-// canvas.addEventListener("mousedown", startDraw)
-// canvas.addEventListener("mousedown", deleteElement)
 canvas.addEventListener("mousemove", continueDraw)
 canvas.addEventListener("mousemove", findPointInFigures)
 canvas.addEventListener("mousemove", move_shov)
@@ -153,6 +159,8 @@ canvas.addEventListener("mousemove", move_shov_width)
 canvas.addEventListener("mousemove", update_mouse_coords) // обязательно в конце после всех других обработчиков мувов
 canvas.addEventListener("mouseout", stopDraw)
 canvas.addEventListener("mouseup", stopDraw)
+canvas.addEventListener("mousemove", onDrag)
+canvas.addEventListener("mouseup", endDrag)
 
 // MOUSE_DOWN
 // отрисовка элемента
@@ -190,6 +198,7 @@ function deleteElement(e) {
             if (original_image) {
                 ctx.drawImage(original_image, 0, 0)
             }  
+            comments = comments_without_hovered_element
             lines = lines_without_hovered_element
             rects = rects_without_hovered_element
             ellipses = ellipses_without_hovered_element
@@ -253,7 +262,14 @@ function continueDraw(e) {
     measureEllipses_without_hovered_element = measureEllipses
     measureEllipses3_without_hovered_element = measureEllipses3
     rulers_without_hovered_element = rulers
-    lines_et_without_hovered_element = lines_et  
+    lines_et_without_hovered_element = lines_et
+    comments_without_hovered_element = comments
+
+    //применяем фильтр ТОЛЬКО к изображению
+    ctx.filter = `brightness(${100 + brightness}%) contrast(${100 + contrast}%)`
+
+    //сбрасываем фильтр, чтобы фигуры не искажались
+    ctx.filter = "none"  
 
     function updating_canvas(do_it_right_now = false) {
         if (lock_updating_canvas && !do_it_right_now) return
@@ -313,6 +329,8 @@ function continueDraw(e) {
 }
 // поиск точки в фигурах
 function findPointInFigures(e) {
+    if (isDragging) return
+
     // поиск точек на фигурах
     findPointInLine(e)
     findPointInRect(e)
@@ -325,7 +343,7 @@ function findPointInFigures(e) {
     findPointInMeasureEllipse3(e)
     findPointInShovMiddle(e)
     findPointInShovBottom(e)
-    findCommentHover(e)
+    findPointInComments(e)
 }
 // двигать угол шва
 function move_shov(e) {
