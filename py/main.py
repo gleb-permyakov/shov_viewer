@@ -6,16 +6,16 @@ import matplotlib.pyplot as plt
 import protocol
 
 
-# SERVER IMPORTS
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import urlparse
-import json
-import time
+# SERVER IMPORTS\
+from fastapi import FastAPI, UploadFile, File, Request, HTTPException
+from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import uuid
 from datetime import datetime
-import mimetypes
 from pathlib import Path
+import json
+import shutil
 # /SERVER IMPORTS
 
 
@@ -152,262 +152,106 @@ def get_pic2(path_img, accuracy):
     return [y1_middle, y2_middle, y1_top, y2_top, y1_bottom, y2_bottom, width, height]
 
 #  SERVER --->
+app = FastAPI()
 
-class SimpleHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        # Парсинг URL
-        parsed_path = urlparse(self.path)
-        path = parsed_path.path
-        
-        # Определение базовой директории для файлов
-        base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-        
-        # Обработка корневого пути
-        if path == '/':
-            filepath = os.path.join(base_dir, 'index.html')
-            self.serve_file(filepath, 'text/html')
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-        # Обработка скачивания JSON аннотации
-        if path == '/download_annotation':
-            filepath = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)),
-                '../annotations',
-                'annotation.json'
-            )
-            self.serve_download(filepath, 'annotation.json')
-        
-        # Остальные файлы
-        else:
-            # Удаление начального слэша и добавление к базовой директории
-            filepath = os.path.join(base_dir, path.lstrip('/'))
-            
-            # Проверка существования файла
-            if os.path.exists(filepath) and os.path.isfile(filepath):
-                # Определение MIME-типа
-                mime_type, _ = mimetypes.guess_type(filepath)
-                if mime_type is None:
-                    mime_type = 'application/octet-stream'
-                
-                self.serve_file(filepath, mime_type)
-            else:
-                self.send_error(404, "Not Found")
-
-    def serve_download(self, filepath, download_name):
-        try:
-            if not os.path.exists(filepath):
-                self.send_error(404, "File not found")
-                return
-
-            with open(filepath, 'rb') as f:
-                content = f.read()
-
-            mime_type, _ = mimetypes.guess_type(filepath)
-            if mime_type is None:
-                mime_type = 'application/octet-stream'
-
-            self.send_response(200)
-            self.send_header('Content-Type', mime_type)
-            self.send_header('Content-Length', str(len(content)))
-            self.send_header(
-                'Content-Disposition',
-                f'attachment; filename="{download_name}"'
-            )
-            self.send_header('Access-Control-Allow-Origin', '*')
-            self.end_headers()
-            self.wfile.write(content)
-
-        except Exception as e:
-            self.send_error(500, f"Internal server error: {str(e)}")
-    
-    def do_POST(self):
-        # Парсинг URL
-        parsed_path = urlparse(self.path)
-        
-        if parsed_path.path == '/find_shov':
-            # Обработка загрузки изображения для поиска шва
-            self.handle_image_upload()
-        elif parsed_path.path == '/save_annotation':
-            # нужно сохранить аннотации снимка
-            # # Читаем данные
-            length = int(self.headers['Content-Length'])
-            data = json.loads(self.rfile.read(length))
-            
-            # Сохраняем в файл
-            with open('annotations/annotation.json', 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-            
-            # Отправляем ответ
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "ok"}).encode())
-        elif parsed_path.path == '/save_protocol_docx':
-            self.handle_docx_request()
-        else:
-            self.send_error(404, "Not Found")
-
-    
-    def handle_docx_request(self):
-        try:
-            length = int(self.headers['Content-Length'])
-            data = json.loads(self.rfile.read(length))
-
-            print(data)
-
-            template_path = Path("./py/protocol_docx.docx")
-            output = protocol.build_protocol_doc(data, template_path)
-
-            with open("protocol_generated.docx", "wb") as f:
-                f.write(output.getvalue())
-
-            # путь к файлу на рабочем столе
-            filepath = Path("./protocol_generated.docx")
-
-            if not os.path.exists(filepath):
-                self.send_error(404, "DOCX not found")
-                return
-
-            with open(filepath, 'rb') as f:
-                content = f.read()
-
-            self.send_response(200)
-            self.send_header('Content-Type', 
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-            self.send_header('Content-Length', str(len(content)))
-            self.send_header('Content-Disposition', 
-                'attachment; filename="protocol.docx"')
-            self.send_header('Access-Control-Allow-Origin', '*')
-            self.end_headers()
-
-            self.wfile.write(content)
-
-        except Exception as e:
-            print("Ошибка:", e)
-            self.send_error(500, str(e))
-    
-    
-    def handle_image_upload(self):
-        """Обработка загрузки изображения для поиска шва"""
-        try:
-            # Заголовок Content-Type
-            content_type = self.headers.get('Content-Type', '')
-            
-            # Проверка, что это multipart/form-data
-            if 'multipart/form-data' not in content_type:
-                self.send_error(400, "Bad Request: Expected multipart/form-data")
-                return
-            
-            # Получение границы из Content-Type
-            boundary = None
-            for part in content_type.split(';'):
-                part = part.strip()
-                if part.startswith('boundary='):
-                    boundary = '--' + part[9:]
-                    break
-            
-            if not boundary:
-                self.send_error(400, "Bad Request: No boundary found")
-                return
-            
-            # Чтение всего тела запроса
-            content_length = int(self.headers.get('Content-Length', 0))
-            post_data = self.rfile.read(content_length)
-            
-            # multipart данные
-            parts = post_data.split(boundary.encode())
-            
-            for part in parts:
-                if b'Content-Disposition: form-data;' in part:
-                    # Поиск имени файла
-                    if b'filename="' in part:
-                        # Разделение заголовков и данных
-                        headers_end = part.find(b'\r\n\r\n')
-                        if headers_end == -1:
-                            continue
-                        
-                        headers = part[:headers_end].decode('utf-8', errors='ignore')
-                        file_data = part[headers_end + 4:]  # +4 для \r\n\r\n
-                        
-                        # Исключение завершающих \r\n в конце данных
-                        if file_data.endswith(b'\r\n'):
-                            file_data = file_data[:-2]
-                        
-                        # Генерация имени файла
-                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                        unique_id = str(uuid.uuid4())[:8]
-                        filename = "shov.png"
-                        # filename = f"shov_image_{timestamp}_{unique_id}.png"
-                        
-                        # Путь к директории py (где находится этот скрипт)
-                        py_dir = os.path.dirname(os.path.abspath(__file__))
-                        filepath = os.path.join(py_dir, filename)
-                        
-                        # Сохранение файла
-                        with open(filepath, 'wb') as f:
-                            f.write(file_data)
-                        
-                        print(f"Изображение сохранено: {filepath}")
-                        
-                        # Успешный ответ
-                        self.send_response(200)
-                        self.send_header('Content-Type', 'application/json')
-                        self.send_header('Access-Control-Allow-Origin', '*')  # Для CORS
-                        self.end_headers()
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-                        coords = get_pic2(str(filepath), 2)
-                        
-                        response = {
-                            'status': 'success',
-                            'message': 'Изображение успешно сохранено',
-                            'filename': filename,
-                            'path': filepath,
-                            'coordinates': coords,
-                        }
-                        self.wfile.write(json.dumps(response).encode('utf-8'))
-                        return
-            
-            # Если не найден файл в запросе
-            self.send_error(400, "Bad Request: No image file found")
-            
-        except Exception as e:
-            print(f"Ошибка при обработке загрузки: {e}")
-            self.send_error(500, f"Internal server error: {str(e)}")
-    
-    def serve_file(self, filepath, content_type):
-        """Универсальный метод для отправки файлов"""
-        try:
-            # Существование файла
-            if not os.path.exists(filepath):
-                self.send_error(404, f"File not found: {filepath}")
-                return
-            # Чтение файла
-            with open(filepath, 'rb') as f:
-                content = f.read()
-            # Отправка ответа
-            self.send_response(200)
-            # Для текстовых файлов добавляется кодировку
-            if content_type.startswith('text/'):
-                self.send_header('Content-Type', content_type + '; charset=utf-8')
-            else:
-                self.send_header('Content-Type', content_type)
-                
-            self.send_header('Content-Length', str(len(content)))
-            self.send_header('Access-Control-Allow-Origin', '*')  # Для CORS
-            self.end_headers()
-            self.wfile.write(content)
-        except Exception as e:
-            self.send_error(500, f"Internal server error: {str(e)}")
-    
-    # Переопределение метода log_message, чтобы не выводить логи в консоль (опционально)
-    def log_message(self, format, *args):
-        print(f"{self.address_string()} - {format % args}")
+# GET /
+@app.get("/", response_class=HTMLResponse)
+def root():
+    filepath = BASE_DIR / "index.html"
+    if not filepath.exists():
+        raise HTTPException(404)
+    return filepath.read_text(encoding="utf-8")
 
-def run_server(port=8000):
-    server_address = ('', port)
-    httpd = HTTPServer(server_address, SimpleHandler)
-    print(f'Server running on http://localhost:{port}')
-    httpd.serve_forever()
 
-if __name__ == '__main__':
-    run_server(8000)  
+# GET /download_annotation
+@app.get("/download_annotation")
+def download_annotation():
+    filepath = BASE_DIR / "annotations" / "annotation.json"
+    if not filepath.exists():
+        raise HTTPException(404, "File not found")
+
+    return FileResponse(
+        path=filepath,
+        filename="annotation.json",
+        media_type="application/json"
+    )
+
+
+# POST /find_shov
+@app.post("/find_shov")
+async def find_shov(file: UploadFile = File(...)):
+    if not file.filename:
+        raise HTTPException(400, "No file uploaded")
+
+    # Генерация имени
+    filename = f"shov_image_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}.png"
+    filepath = Path(__file__).parent / filename
+
+    # Сохранение файла
+    with open(filepath, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    print(f"Изображение сохранено: {filepath}")
+
+    # Вызов твоей функции
+    coords = get_pic2(str(filepath), 2)
+
+    return {
+        "status": "success",
+        "filename": filename,
+        "path": str(filepath),
+        "coordinates": coords,
+    }
+
+
+# POST /save_annotation
+@app.post("/save_annotation")
+async def save_annotation(request: Request):
+    data = await request.json()
+
+    filepath = BASE_DIR / "annotations" / "annotation.json"
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    return {"status": "ok"}
+
+
+# POST /save_protocol_docx
+@app.post("/save_protocol_docx")
+async def save_protocol_docx(request: Request):
+    data = await request.json()
+
+    template_path = Path("./protocol_docx.docx")
+    output = protocol.build_protocol_doc(data, template_path)
+
+    filepath = Path("./protocol_generated.docx")
+
+    with open(filepath, "wb") as f:
+        f.write(output.getvalue())
+
+    if not filepath.exists():
+        raise HTTPException(404, "DOCX not found")
+
+    return FileResponse(
+        path=filepath,
+        filename="protocol.docx",
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+
+# Статические файлы (вместо твоего serve_file)
+from fastapi.staticfiles import StaticFiles
+
+app.mount("/", StaticFiles(directory=BASE_DIR, html=True), name="static")

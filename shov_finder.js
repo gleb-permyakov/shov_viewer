@@ -6,12 +6,18 @@ find_shov.addEventListener("click", () => {
 function save_img_to_server() {
     canvas.toBlob(blob => {
         const formData = new FormData();
-        formData.append('image', blob, 'shov.png');
+        formData.append('file', blob, 'shov.png');
         fetch('/find_shov', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(async response => {
+            const text = await response.text();
+            if (!response.ok) {
+                throw new Error(text);
+            }
+            return JSON.parse(text);
+        })
         .then(data => {
             if (data.status === 'success' && data.coordinates) {
                 const [y1_middle, y2_middle, y1_top, y2_top, y1_bottom, y2_bottom, width, height] = data.coordinates;
@@ -27,7 +33,7 @@ function save_img_to_server() {
             }
         })
         .catch(error => console.error('Ошибка:', error));
-    });
+    }, 'image/png');
 }
 
 const delete_shov = document.querySelector(".delete_shov")

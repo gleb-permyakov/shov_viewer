@@ -12,7 +12,6 @@ fixed_element_data = [] // сюда мы фиксируем данные о то
 const saveBtn = document.querySelector("#saveBtn")
 const popup_save = document.querySelector(".popup_save")
 saveBtn.addEventListener("click", () => {
-    createJSFileWithArrays()
     createTableDefects()
     popup_save.classList.add("show_save_popup")
 })
@@ -373,11 +372,14 @@ btn_close_popup_save.addEventListener('click', () => {
 
 btn_save_annotation_json.addEventListener('click', () => {
     // скачать документ с сервера
-    window.location.href = "/download_annotation";
+    createJSFileWithArrays()
+    setTimeout(() => {
+        window.location.href = "/download_annotation";
+    }, 500)
 })
 
 btn_save_protocol_docx.addEventListener('click', async (event) => {
-    // формируем json аннотацию
+    // формируем json 
     const object_name = document.querySelector("#object_name").value
     const object_name_2 = document.querySelector("#object_name_2").value
     const address = document.querySelector("#address").value 
