@@ -23,14 +23,12 @@ def get_pic2(path_img, accuracy):
     """
     Обработка снимка с целью обнаружения границ шва
     """
-    with open(path_img, 'rb') as f:  # ← Относительный путь!
+    with open(path_img, 'rb') as f:
         img_bytes = f.read()
-    
-    print(f"Bytes read: {len(img_bytes)}")
-    
+
     if len(img_bytes) == 0:
         return "Файл пустой"
-    
+
     # Декодирование из байтов
     img_array = np.frombuffer(img_bytes, np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
@@ -51,13 +49,13 @@ def get_pic2(path_img, accuracy):
 
     # Увеличение яркости и контрастности в зависимости от того насколько яркая картинка сейчас
     print(middle)
-    if middle > 0.25:
+    if middle > 0.25: 
+        # снимок светлый
         img = cv2.add(img, -100)  
-        img = cv2.convertScaleAbs(img, alpha=3, beta=0)  
-        img = cv2.convertScaleAbs(img, alpha=3, beta=0)
+        img = cv2.convertScaleAbs(img, alpha=9, beta=0)  
     else:
-        img = cv2.convertScaleAbs(img, alpha=2, beta=0)  
-        img = cv2.convertScaleAbs(img, alpha=2, beta=0)
+        # снимок тёмный
+        img = cv2.convertScaleAbs(img, alpha=4, beta=0)  
 
     # ============ переделываем занво матрицу освещенности после обработки
     # Матрица освещённости
@@ -164,6 +162,7 @@ app.add_middleware(
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+print(BASE_DIR)
 
 
 # GET /
@@ -171,7 +170,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 def root():
     filepath = BASE_DIR / "index.html"
     if not filepath.exists():
-        raise HTTPException(404)
+        raise HTTPException(404)    
     return filepath.read_text(encoding="utf-8")
 
 
@@ -251,7 +250,12 @@ async def save_protocol_docx(request: Request):
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
 
-# Статические файлы (вместо твоего serve_file)
+# Статические файлы
 from fastapi.staticfiles import StaticFiles
+app.mount("/static", StaticFiles(directory=BASE_DIR, html=True), name="static")
 
-app.mount("/", StaticFiles(directory=BASE_DIR, html=True), name="static")
+# Страница 404
+@app.get("/{full_path:path}")
+async def spa_fallback(full_path: str):
+    print("404 Ресурс не найден")
+    return FileResponse(BASE_DIR / "error.html")

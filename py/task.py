@@ -2,14 +2,12 @@ import numpy as np
 import cv2
 
 def simple_clean_outliers(data, accuracy):
-    """
-    Исключение выбросов
-    """
+    """ Исключение выбросов """
     cleaned = data.copy()
-    
+
     median_val = np.median(data)
     std_val = np.std(data)
-    
+
     lower = median_val - accuracy * std_val
     upper = median_val + accuracy * std_val
     

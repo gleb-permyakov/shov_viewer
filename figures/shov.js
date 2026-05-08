@@ -1,6 +1,6 @@
 let shov_lines = [] // цвет, толщина, x1, y1, x2, y2
 
-// отрисовка всех предыдущих линий
+// отрисовка всех линий шва
 function drawAllShovLines() {
     shov_lines.forEach(line => {
         ctx.beginPath()
