@@ -148,7 +148,7 @@ function findPointInMeasureRect(e) {
 
         if (nearEdge) {
 
-            // 🔥 СТАРАЯ ПОДСВЕТКА (НЕ ЛОМАЕМ)
+            // СТАРАЯ ПОДСВЕТКА (НЕ ЛОМАЕМ)
             ctx.beginPath()
             ctx.rect(left, top, right - left, bottom - top)
             ctx.strokeStyle = "#fafafa"

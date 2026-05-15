@@ -19,6 +19,7 @@ saveBtn.addEventListener("click", () => {
 // Функция для создания JS файла с массивами
 async function createJSFileWithArrays() {
     // Данные для заполнения массивов
+    comment = document.querySelector("#globalAnnotation").value
     const data = {
         ellipses: ellipses,
         ellipses3: ellipses3,
@@ -29,7 +30,9 @@ async function createJSFileWithArrays() {
         measureRects: measureRects,
         rects: rects,
         rulers: rulers,
-        shov_lines: shov_lines
+        shov_lines: shov_lines,
+        defects: defects,
+        comment: comment
     };
 
     try {
@@ -40,7 +43,7 @@ async function createJSFileWithArrays() {
             },
             body: JSON.stringify(data)
         });
-        
+
         const result = await response.json();
         console.log('Сохранено:', result);
         return result;
@@ -120,6 +123,12 @@ function loadAnnotationFromLSON(text) {
         (data["shov_lines"]).forEach(element => {
             shov_lines.push(element)
         });
+        // загрузили дефекты
+        (data["defects"]).forEach(defect => {
+            defects.push(defect)
+        });
+        // загрузили комментарий
+        document.querySelector("#globalAnnotation").value = data["comment"]
 
         drawAllShovLines()
         drawAllLines()
@@ -132,6 +141,7 @@ function loadAnnotationFromLSON(text) {
         drawAllMeasureEllipses3()
         drawAllMeasureRects()
         drawAllComments()
+        redraw_defects()
         
 
     } catch (error) {
@@ -325,7 +335,6 @@ function delete_defect_annotation(m_id) {
 // перерисовать без подсвечивания
 function redraw() {
     // отрисовываем все время
-    console.log("here 111") 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     //применяем фильтр ТОЛЬКО к изображению
@@ -428,11 +437,12 @@ btn_save_protocol_docx.addEventListener('click', async (event) => {
 
 })
 
-// генерация таблицы дефектов в попапе 
+// генерация таблицы дефектов во  всплывающем окне 
 function createTableDefects() {
     arr_defects_add = []
     pora = {}
     shlak = {}
+    volfram = {}
     defects.forEach(defect => {
         sizes = defect[1]
         name = defect[3]
@@ -451,7 +461,7 @@ function createTableDefects() {
         if (name == "Шлаковые включения") {
             d_len = normalize_mm(sizes[0])
             d_width = normalize_mm(sizes[1])
-            abbr = "" + Math.max(d_len, d_width) + "×" + Math.min(d_len, d_width)
+            abbr = "" + Math.max(d_len, d_width) + " × " + Math.min(d_len, d_width)
             if (!shlak[abbr]) {
                 shlak[abbr] = 1
             } else {
@@ -465,7 +475,7 @@ function createTableDefects() {
     }
     // фильтруем записи по шлаковым включениям
     for (let key of Object.keys(shlak)) {
-        arr_defects_add.push((shlak[key] + "ШК" + key).replaceAll(".", ",").replace("1", ""))
+        arr_defects_add.push((shlak[key] + "Ш" + key).replaceAll(".", ",").replace("1", ""))
     }
     // генерация таблицы
     const table = document.getElementById("defectsTable")
