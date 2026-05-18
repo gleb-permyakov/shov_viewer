@@ -164,6 +164,7 @@ function findPointInMeasureEllipse3(e) {
 
             // для добавления дефекта
             element_to_add = ["ellipse3", [Math.abs(a*2) * mmToPx_ratio, Math.abs(b*2) * mmToPx_ratio], el[8]]
+            console.log(element_to_add[2])
         }
 
         counter++

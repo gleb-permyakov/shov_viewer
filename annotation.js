@@ -203,6 +203,7 @@ function popup_delete_btns() {
     ok.addEventListener("click", () => {
         const selector_defect = document.querySelector("#defect_selector2")
         // заменяем название дефекта в плашке
+        console.log(fixed_element_data, selector_defect)
         defects.forEach(element => {
             if (element[2] == fixed_element_data[2]) {
                 element[3] = selector_defect.value
@@ -243,7 +244,7 @@ function redraw_defects() {
             e.preventDefault()
             if (e.button === 2) { 
                 const popup_delete = document.querySelector(".popup_delete_defect")
-                // fixed_element_data = [element[0], [(element[1][0]).toFixed(2), (element[1][1]).toFixed(2)], element[2]]
+                fixed_element_data = ["", [(element[1][0]).toFixed(2), (element[1][1]).toFixed(2)], element[2]]
                 popup_delete.classList.add("show")
             }
         })
@@ -439,44 +440,9 @@ btn_save_protocol_docx.addEventListener('click', async (event) => {
 
 // генерация таблицы дефектов во  всплывающем окне 
 function createTableDefects() {
-    arr_defects_add = []
-    pora = {}
-    shlak = {}
-    volfram = {}
-    defects.forEach(defect => {
-        sizes = defect[1]
-        name = defect[3]
-        // правильно записываем все диаметры пор
-        if (name == "Пора") {
-            d = Math.max(sizes[0], sizes[1])
-            d = normalize_mm(d)
-            abbr = "" + d
-            if (!pora[abbr]) {
-                pora[abbr] = 1
-            } else {
-                pora[abbr] += 1
-            }
-        }
-        // теперь шлаковые включения
-        if (name == "Шлаковые включения") {
-            d_len = normalize_mm(sizes[0])
-            d_width = normalize_mm(sizes[1])
-            abbr = "" + Math.max(d_len, d_width) + " × " + Math.min(d_len, d_width)
-            if (!shlak[abbr]) {
-                shlak[abbr] = 1
-            } else {
-                shlak[abbr] += 1
-            }
-        }
-    });
-    // фильтруем записи по порам
-    for (let key of Object.keys(pora)) {
-        arr_defects_add.push((pora[key] + "П" + key).replaceAll(".", ",").replace("1", ""))
-    }
-    // фильтруем записи по шлаковым включениям
-    for (let key of Object.keys(shlak)) {
-        arr_defects_add.push((shlak[key] + "Ш" + key).replaceAll(".", ",").replace("1", ""))
-    }
+
+    arr_defects_add = process_defects(defects)
+    
     // генерация таблицы
     const table = document.getElementById("defectsTable")
     table.innerHTML = ""
@@ -508,7 +474,6 @@ function createTableDefects() {
         }
         table.appendChild(tr)
     })
-    console.log(arr_defects_add)
 }
 
 // 0,2; 0,3; 0,4; 0,5; 0,6; 0,8; 1,0; 1,2; 1,5; 2,0; 2,5; 3,0 мм
