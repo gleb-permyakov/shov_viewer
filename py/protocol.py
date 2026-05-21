@@ -72,17 +72,6 @@ def _replace_static_placeholders(doc: Document, data: dict[str, Any]) -> None:
     _set_paragraph_run_text(p, 1, "")
     _set_paragraph_run_text(p, 2, "")
 
-    # ГОСТы
-    # p = paragraphs[4]
-    # if data.get("quality_standard"):
-    #     p.runs[1].text = str(data["quality_standard"])
-
-    # if data.get("control_standard"):
-    #     p.runs[2].text = (
-    #         f"\nКонтроль проводился по методике в соответствии с требованиями "
-    #         f"ГОСТ {data['control_standard']}."
-    #     )
-
     # Заключение лаборатории
     conclusion = data.get("lab_conclusion")
     if conclusion:
@@ -133,19 +122,7 @@ def _build_defects_table(doc: Document, defects: list[dict[str, Any]], data: dic
         table._tbl.append(new_row_xml)
 
         row = table.rows[-1]
-        values = [
-            "",
-            "",
-            "",
-            "",
-            "",
-            defect,
-            "",
-            "",
-            "",
-            "",
-            "",
-        ]
+        values = [ "", "", "", "", "", defect, "", "", "", "", "", ]
 
         for cell, value in zip(row.cells, values):
             _set_cell_text_preserve_style(cell, value)

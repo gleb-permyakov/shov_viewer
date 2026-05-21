@@ -64,11 +64,12 @@ function process_defects(arr_defects) {
 
     // массив со всеми дефектами для записи
     result_defects = []
+
     function filter_defects(defect_obj, letters) {
         for (let key of Object.keys(defect_obj)) {
             result_defects.push((defect_obj[key] + letters + key).replaceAll(".", ",").replace("1", ""))
         }
-    }
+    } 
 
     // фильтруем записи по порам
     filter_defects(pora, "П")
