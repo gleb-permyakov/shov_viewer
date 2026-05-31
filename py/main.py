@@ -1,16 +1,13 @@
 import cv2
 import numpy as np
 import task
-import matplotlib.pyplot as plt
-
 import protocol
 
 
-# SERVER IMPORTS\
+# SERVER IMPORTS
 from fastapi import FastAPI, UploadFile, File, Request, HTTPException
-from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-import os
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -149,7 +146,7 @@ def get_pic2(path_img, accuracy):
 
     return [y1_middle, y2_middle, y1_top, y2_top, y1_bottom, y2_bottom, width, height]
 
-#  SERVER --->
+#  SERVER
 app = FastAPI()
 
 # CORS
@@ -173,7 +170,6 @@ def root():
         raise HTTPException(404)    
     return filepath.read_text(encoding="utf-8")
 
-
 # GET /download_annotation
 @app.get("/download_annotation")
 def download_annotation():
@@ -186,7 +182,6 @@ def download_annotation():
         filename="annotation.json",
         media_type="application/json"
     )
-
 
 # POST /find_shov
 @app.post("/find_shov")
@@ -202,9 +197,7 @@ async def find_shov(file: UploadFile = File(...)):
     with open(filepath, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    print(f"Изображение сохранено: {filepath}")
-
-    # Вызов твоей функции
+    # Вызов функции работы с изображением
     coords = get_pic2(str(filepath), 2)
 
     return {
@@ -213,7 +206,6 @@ async def find_shov(file: UploadFile = File(...)):
         "path": str(filepath),
         "coordinates": coords,
     }
-
 
 # POST /save_annotation
 @app.post("/save_annotation")
@@ -226,7 +218,6 @@ async def save_annotation(request: Request):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     return {"status": "ok"}
-
 
 # POST /save_protocol_docx
 @app.post("/save_protocol_docx")
