@@ -226,29 +226,104 @@ popup_delete_btns()
 function redraw_defects() {
     const defects_div = document.querySelector(".defects")
     defects_div.innerHTML = ""
-    new_inner = ""
-    defects.forEach(element => {
-        new_inner += '<div class="defect" data-defect-id="' + element[2] + '" data-figure="' + element[0] + '"><p>' + element[3] + '</p><p>' + Math.max((element[1][0]).toFixed(2), (element[1][1]).toFixed(2)) + ' × ' + Math.min((element[1][0]).toFixed(2), (element[1][1]).toFixed(2)) + ' мм</p></div>'
-    });
+
+    const grouped = {}
+
+    defects.forEach(defect => {
+        const defectName = defect[3]
+
+        if (!grouped[defectName]) {
+            grouped[defectName] = []
+        }
+
+        grouped[defectName].push(defect)
+    })
+
+    let new_inner = ""
+
+    Object.keys(grouped).forEach(defectName => {
+        const group = grouped[defectName]
+
+        if (group.length === 1) {
+            const defect = group[0]
+            const sizeText = getDefectSizeText(defect)
+
+            new_inner += `
+                <div class="defect defect-single"
+                    data-defect-id="${defect[2]}"
+                    data-figure="${defect[0]}">
+                    <p>${defectName}</p>
+                    <p>${sizeText}</p>
+                </div>
+            `
+        } else {
+            new_inner += `
+                <details class="defect-group">
+                    <summary class="defect-group-header">
+                        <span>${defectName}</span>
+                        <span>${group.length} шт.</span>
+                    </summary>
+
+                    <div class="defect-group-content">
+            `
+
+            group.forEach((defect, index) => {
+                const sizeText = getDefectSizeText(defect)
+
+                new_inner += `
+                    <div class="defect defect-child"
+                        data-defect-id="${defect[2]}"
+                        data-figure="${defect[0]}">
+                        <p>${index + 1}. ${defectName}</p>
+                        <p>${sizeText}</p>
+                    </div>
+                `
+            })
+
+            new_inner += `
+                    </div>
+                </details>
+            `
+        }
+    })
+
     defects_div.innerHTML = new_inner
-    // теперь выставляем обработчик на наведение мыши
-    defects_annotation = document.querySelectorAll(".defect")
-    defects_annotation.forEach(element => {
-        element.addEventListener("mouseenter", () => {
-            flash_measure(element)
+
+    const defectCards = document.querySelectorAll(".defect")
+
+    defectCards.forEach(card => {
+        card.addEventListener("mouseenter", () => {
+            flash_measure(card)
         })
-        element.addEventListener("mouseleave", () => {
+
+        card.addEventListener("mouseleave", () => {
             redraw()
         })
-        element.addEventListener("contextmenu", (e) => {
+
+        card.addEventListener("contextmenu", (e) => {
             e.preventDefault()
-            if (e.button === 2) { 
-                const popup_delete = document.querySelector(".popup_delete_defect")
-                // fixed_element_data = ["", [(element[1][0]).toFixed(2), (element[1][1]).toFixed(2)], element[2]]
-                popup_delete.classList.add("show")
-            }
+
+            const defectId = card.dataset.defectId
+            const defect = defects.find(d => String(d[2]) === String(defectId))
+
+            if (!defect) return
+
+            fixed_element_data = [defect[0], defect[1], defect[2]]
+
+            const popup_delete = document.querySelector(".popup_delete_defect")
+            popup_delete.classList.add("show")
         })
-    });
+    })
+}
+
+function getDefectSizeText(defect) {
+    const width = Number(defect[1][0])
+    const height = Number(defect[1][1])
+
+    const maxSize = Math.max(width, height).toFixed(2)
+    const minSize = Math.min(width, height).toFixed(2)
+
+    return `${maxSize} × ${minSize} мм`
 }
 
 // id дефекта по measure_id
