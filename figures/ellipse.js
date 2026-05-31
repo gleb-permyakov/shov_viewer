@@ -1,4 +1,3 @@
-// для построения эллипсов
 let ellipses = []
 let actual_ellipse_data = [] // [цвет, толщина, xo, y0, middleX, middleY, radiusX, radiusY]
 
@@ -97,15 +96,12 @@ function findPointInEllipse(e) {
 
         // погрешность в пикселях
         const accuracy = 5
-
         // условие >= 1
         const condition_1 = (x - h)**2 / (a - accuracy)**2 + (y - k)**2 / (b - accuracy)**2 >= 1
-
         // условие <= 1
         const condition_2 = (x - h)**2 / (a + accuracy)**2 + (y - k)**2 / (b + accuracy)**2 <= 1
 
         if (condition_1 && condition_2) {
-            // подсвечиваем
             // параметры рисования
             ctx.strokeStyle = "#fafafa"
             ctx.lineWidth = ellipse[1]
@@ -113,9 +109,7 @@ function findPointInEllipse(e) {
             ctx.beginPath()
             ctx.ellipse(ellipse[4], ellipse[5], ellipse[6], ellipse[7], 0, 0, Math.PI * 2);
             ctx.stroke()
-            // сказали, что мышь на элементе
             mouse_over_element = true
-            // передаем массив без этой линии
             ellipses_without_hovered_element = ellipses.slice(0, counter).concat(ellipses.slice(counter+1))
 
             element_to_add = []

@@ -1,9 +1,6 @@
 let measureRects = []
 let actual_measureRect_data = [] // [цвет, толщина, x1, y1, x2, y2, measure_id]
 
-// ==========================
-// START DRAW
-// ==========================
 function drawMeasureRect(e) {
     const coords = getCanvasCoords(e)
     const startX = coords.x
@@ -14,9 +11,6 @@ function drawMeasureRect(e) {
     actual_measureRect_data.push(startX, startY)
 }
 
-// ==========================
-// DRAWING (LIVE)
-// ==========================
 function drawingMeasureRect(e) {
     if (!isDrawing) return
 
@@ -42,9 +36,6 @@ function drawingMeasureRect(e) {
     drawRectDimensions(left, top, width, height)
 }
 
-// ==========================
-// END DRAW
-// ==========================
 function measureRectEnd(e) {
     const coords = getCanvasCoords(e)
     const endX = coords.x
@@ -56,9 +47,6 @@ function measureRectEnd(e) {
     measureRects.push([...actual_measureRect_data])
 }
 
-// ==========================
-// DRAW ALL
-// ==========================
 function drawAllMeasureRects() {
     measureRects.forEach(rect => {
 
@@ -72,7 +60,6 @@ function drawAllMeasureRects() {
         const width = Math.abs(x2 - x1)
         const height = Math.abs(y2 - y1)
 
-        // основной прямоугольник
         ctx.strokeStyle = rect[0]
         ctx.lineWidth = rect[1]
 
@@ -84,9 +71,6 @@ function drawAllMeasureRects() {
     })
 }
 
-// ==========================
-// DIMENSIONS
-// ==========================
 function drawRectDimensions(x, y, widthPx, heightPx) {
 
     const width = Math.abs(widthPx) * mmToPx_ratio
@@ -115,9 +99,6 @@ function drawRectDimensions(x, y, widthPx, heightPx) {
     ctx.restore()
 }
 
-// ==========================
-// HOVER (СТАРЫЙ ПОВЕДЕНИЕ СОХРАНЕНО)
-// ==========================
 function findPointInMeasureRect(e) {
 
     const coords = getCanvasCoords(e)
@@ -148,7 +129,6 @@ function findPointInMeasureRect(e) {
 
         if (nearEdge) {
 
-            // СТАРАЯ ПОДСВЕТКА (НЕ ЛОМАЕМ)
             ctx.beginPath()
             ctx.rect(left, top, right - left, bottom - top)
             ctx.strokeStyle = "#fafafa"
@@ -170,7 +150,6 @@ function findPointInMeasureRect(e) {
                 rect[6]
             ]
 
-            // 🔥 ДОБАВЛЕНО: активируем drag UI только при hover
             drawMeasureRectHandles(left, top, right, bottom, rect[0])
         }
 
@@ -178,9 +157,6 @@ function findPointInMeasureRect(e) {
     })
 }
 
-// ==========================
-// HANDLES (ТОЛЬКО ПРИ HOVER)
-// ==========================
 function drawMeasureRectHandles(left, top, right, bottom, color) {
     const size = 3
 
@@ -203,9 +179,6 @@ function drawMeasureRectHandles(left, top, right, bottom, color) {
     })
 }
 
-// ==========================
-// HANDLE HIT TEST
-// ==========================
 function findMeasureRectHandle(coords) {
 
     const radius = 5
@@ -234,9 +207,6 @@ function findMeasureRectHandle(coords) {
     return null
 }
 
-// ==========================
-// BODY HIT (ТОЛЬКО ГРАНИЦЫ, НЕ ВНУТРЬ!)
-// ==========================
 function findMeasureRectBody(coords) {
 
     for (let i = 0; i < measureRects.length; i++) {
@@ -261,9 +231,6 @@ function findMeasureRectBody(coords) {
     return null
 }
 
-// ==========================
-// MOVE HANDLE
-// ==========================
 function moveMeasureRectHandle(index, handle, x, y) {
 
     const r = measureRects[index]
@@ -289,9 +256,6 @@ function moveMeasureRectHandle(index, handle, x, y) {
     }
 }
 
-// ==========================
-// MOVE BODY (ТОЛЬКО ЗА КРАЯ, НЕ ЗА ЦЕНТР)
-// ==========================
 function moveMeasureRect(index, x, y) {
 
     const r = measureRects[index]
@@ -305,9 +269,6 @@ function moveMeasureRect(index, x, y) {
     r[5] += dy
 }
 
-// ==========================
-// DIST
-// ==========================
 function distance(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 }

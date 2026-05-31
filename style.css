@@ -4,15 +4,13 @@
     box-sizing: border-box;
 }
 
-/* скроллбар */
-
 /* ширина скроллбара */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
-/* фон (трек) */
+/* фон */
 ::-webkit-scrollbar-track {
     background: #21262F; /* черный */
 }
@@ -30,7 +28,6 @@
 
 html, .annotation {
     background-color: #3887c7;
-    /* background-color: #849bcc; */
 }
 
 .inDev {
@@ -40,7 +37,6 @@ html, .annotation {
 }
 
 body {
-    /* width: 1000px; */
     font-family: Arial, sans-serif;
 }
 
@@ -48,14 +44,6 @@ body {
     width: 100%;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     max-width: 100%;
-    /* background: 
-        conic-gradient(
-            from 225deg at 59.56% 105.28%, 
-            rgba(33, 38, 47, 0.5) 59deg, 
-            rgba(0, 131.75, 255, 0.5) 97deg, 
-            rgba(33, 38, 47, 0.5) 201deg
-        ), 
-        #646C89; */
     margin: 0 auto;
     overflow: hidden;
 }
@@ -73,14 +61,11 @@ body {
     position: absolute;
     margin: 0 auto;
     left: 50%;
-    /* transform: translateX(-50%); */
     width: 100%;
     height: 100%;
 }
 
 #canvas {
-    /* position: absolute;
-    left: 50%; */
     width: 100%;
     height: 100%;
     display: flex;
@@ -109,8 +94,8 @@ body {
 
 .tool-btn {
     background: transparent;
-    color: #e0e0e0; /* Светлый текст */
-    border: 1px solid #3a3f4b; /* Едва заметная граница */
+    color: #e0e0e0;
+    border: 1px solid #3a3f4b; 
     padding: 6px 12px;
     font-size: 14px;
     border-radius: 6px;
@@ -139,10 +124,10 @@ body {
 .tool-select {
     padding: 6px 12px;
     font-size: 14px;
-    border: 1px solid #3a3f4b;  /* как у кнопок */
-    border-radius: 6px;          /* как у кнопок */
-    background-color: #21262F;   /* темный фон панели */
-    color: #e0e0e0;              /* светлый текст */
+    border: 1px solid #3a3f4b;  
+    border-radius: 6px;          
+    background-color: #21262F;   
+    color: #e0e0e0;              
     cursor: pointer;
     transition: 0.2s all;
 }
@@ -158,7 +143,7 @@ body {
     width: 40px;
     height: 40px;
     padding: 2px;
-    border: 1px solid #3a3f4b; /* Едва заметная граница */
+    border: 1px solid #3a3f4b; 
     border-radius: 4px;
     cursor: pointer;
 }
@@ -255,7 +240,7 @@ body {
 
 .bc-panel {
     position: absolute;
-    top: 110%; /* прямо под кнопкой */
+    top: 110%; 
     left: 0;
 
     background: #21262F;
@@ -278,31 +263,31 @@ body {
 }
 
 .bc-panel input[type="number"] {
-    width: 60px;               /* компактное поле */
-    padding: 4px 6px;          /* немного внутреннего отступа */
-    margin-left: 6px;          /* отступ от надписи */
+    width: 60px;               
+    padding: 4px 6px;         
+    margin-left: 6px;   
     font-size: 14px;
     font-weight: bold;
-    text-align: center;        /* числа по центру */
-    border: 2px solid  #8cb5ee;; /* желтая рамка, как твой цвет тулбара */
-    border-radius: 4px;        /* скругление углов */
-    background-color: #222;    /* темный фон, как тулбар */
-    color: #e0e0e0;            /* жёлтый текст */
-    outline: none;             /* убираем стандартное выделение */
+    text-align: center;    
+    border: 2px solid  #8cb5ee;; 
+    border-radius: 4px;   
+    background-color: #222;  
+    color: #e0e0e0;         
+    outline: none;            
     transition: all 0.2s ease;
 }
 
 .bc-panel input[type="number"]:hover {
-    border-color: #fff;        /* подсветка при наведении */
+    border-color: #fff;     
 }
 
 .bc-panel input[type="number"] {
-    border: 2px solid #3a3f4b; /* как границы кнопок */
-    color: #e0e0e0;            /* как основной текст тулбара */
-    background-color: #21262F; /* темный фон панели */
+    border: 2px solid #3a3f4b;
+    color: #e0e0e0;       
+    background-color: #21262F;
 }
 .bc-panel input[type="number"]:focus {
-    border-color: #8cb5ee;     /* светло-синий акцент при фокусе */
+    border-color: #8cb5ee; 
     box-shadow: 0 0 5px rgba(140, 181, 238, 0.5);
 }
 
@@ -338,9 +323,8 @@ body {
     z-index: 1000;
 }
 
-/* левая часть */
 .annotation-left {
-    width: 50%;
+    width: 60%;
     height: 100%;
     max-height: 450px;
     overflow-y: auto;
@@ -348,15 +332,13 @@ body {
     box-sizing: border-box;
 }
 
-/* правая часть */
 .annotation-right {
-    width: 50%;
+    width: 40%;
     height: 100%;
     padding: 10px;
     box-sizing: border-box;
 }
 
-/* textarea — теперь в стиле тулбара */
 #globalAnnotation {
     width: 100%;
     height: 100%;
@@ -547,7 +529,6 @@ body {
 .popup_btn {
     width: 180px;
     padding: 5px;
-    /* margin: 0 auto; */
     background-color: #21262F;
     color: #fff;
     font-weight: normal;
@@ -585,7 +566,6 @@ body {
     width: auto;
     box-sizing: border-box;
     min-width: 50px;
-    /* text-align: center; */
     padding-left: 5px;
 }
 

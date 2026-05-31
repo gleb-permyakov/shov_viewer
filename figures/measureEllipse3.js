@@ -1,5 +1,3 @@
-// figures/measureEllipse3.js
-
 let measureEllipses3 = []
 let measureEllipses3_without_hovered_element = []
 let actual_measureEllipse3_data = []  // [цвет, толщина, xA, yA, xB, yB, xC, yC, measure_id]
@@ -30,7 +28,7 @@ function drawMeasureEllipse3(e) {
         actual_measureEllipse3_data.push(x, y)
         measureEllipse3_status = 3
     } else if(measureEllipse3_status === 3) {
-        actual_measureEllipse3_data.push(x, y, measure_id) // тут помимо координат еще id добавляем
+        actual_measureEllipse3_data.push(x, y, measure_id)
         measure_id += 1
         drawCurrentMeasureEllipse3(actual_measureEllipse3_data)
         measureEllipses3.push(actual_measureEllipse3_data)
@@ -72,15 +70,11 @@ function drawCurrentMeasureEllipse3(el) {
     drawEllipseDimensionsEllipse3(cx, cy, a, b, angle)
 }
 
-// подписи полуосей за пределами эллипса
-// Подписи полуосей эллипса
 function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.save()
     ctx.translate(cx, cy)
 
-    // ======= Большая ось =======
     let angleBig = angle
-    // если угол линии «вниз», переворачиваем текст
     if(angleBig > Math.PI/2 || angleBig < -Math.PI/2) angleBig += Math.PI
 
     ctx.save()
@@ -97,7 +91,6 @@ function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.fillText((a*2*mmToPx_ratio).toFixed(2), 0, -b - offsetBig)
     ctx.restore()
 
-    // ======= Малая ось =======
     let angleSmall = angle - Math.PI/2
     if(angleSmall > Math.PI/2 || angleSmall < -Math.PI/2) angleSmall += Math.PI
 
@@ -118,7 +111,6 @@ function drawEllipseDimensionsEllipse3(cx, cy, a, b, angle) {
     ctx.restore()
 }
 
-// поиск точки на эллипсе для hover / удаления
 function findPointInMeasureEllipse3(e) {
     const coords = getCanvasCoords(e)
     const x = coords.x
@@ -161,8 +153,6 @@ function findPointInMeasureEllipse3(e) {
             measureEllipses3_without_hovered_element =
                 measureEllipses3.slice(0, counter)
                 .concat(measureEllipses3.slice(counter+1))
-
-            // для добавления дефекта
             element_to_add = ["ellipse3", [Math.abs(a*2) * mmToPx_ratio, Math.abs(b*2) * mmToPx_ratio], el[8]]
             console.log(element_to_add[2])
         }

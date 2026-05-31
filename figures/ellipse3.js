@@ -1,4 +1,3 @@
-// эллипс по 3 точкам
 let ellipses3 = []
 let ellipse3_status = 1
 let actual_ellipse3_data = [] // [цвет, толщина, xo, y0, x1, y1, x2, y2]

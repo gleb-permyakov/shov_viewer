@@ -8,9 +8,6 @@ const CLICK_THRESHOLD = 6
 
 let lastMouse = { x: 0, y: 0 }
 
-// ============================
-// START DRAG
-// ============================
 function startDrag(e) {
     const coords = getCanvasCoords(e)
 
@@ -21,9 +18,6 @@ function startDrag(e) {
     lastMouse.x = coords.x
     lastMouse.y = coords.y
 
-    // ============================
-    // RULER
-    // ============================
     const handleHit = findRulerHandle(coords)
     if (handleHit) {
         isDragging = true
@@ -41,9 +35,6 @@ function startDrag(e) {
         return
     }
 
-    // ============================
-    // MEASURE RECT
-    // ============================
     const rectHandle = findMeasureRectHandle(coords)
     if (rectHandle) {
         isDragging = true
@@ -61,9 +52,6 @@ function startDrag(e) {
         return
     }
 
-    // ============================
-    // MEASURE ELLIPSE (NEW)
-    // ============================
     const ellipseHandle = findMeasureEllipseHandle(coords)
     if (ellipseHandle) {
         isDragging = true
@@ -82,9 +70,6 @@ function startDrag(e) {
     }
 }
 
-// ============================
-// DRAG MOVE
-// ============================
 function onDrag(e) {
     if (!isDragging) return
 
@@ -93,9 +78,6 @@ function onDrag(e) {
     const dx = coords.x - lastMouse.x
     const dy = coords.y - lastMouse.y
 
-    // ============================
-    // RULER
-    // ============================
     if (dragState === "ruler-handle") {
         moveRulerHandle(activeFigure, activeHandle, coords.x, coords.y)
     }
@@ -104,9 +86,6 @@ function onDrag(e) {
         moveRuler(activeFigure, coords.x, coords.y)
     }
 
-    // ============================
-    // MEASURE RECT
-    // ============================
     if (dragState === "measureRect-handle") {
         moveMeasureRectHandle(activeFigure, activeHandle, coords.x, coords.y)
     }
@@ -120,9 +99,6 @@ function onDrag(e) {
         r[5] += dy
     }
 
-    // ============================
-    // MEASURE ELLIPSE (NEW)
-    // ============================
     if (dragState === "measureEllipse-handle") {
         moveMeasureEllipseHandle(activeFigure, activeHandle, coords.x, coords.y)
     }
@@ -137,9 +113,6 @@ function onDrag(e) {
     redrawAll()
 }
 
-// ============================
-// END DRAG
-// ============================
 function endDrag() {
     isDragging = false
     dragState = null
@@ -147,9 +120,6 @@ function endDrag() {
     activeHandle = null
 }
 
-// ============================
-// HELPERS
-// ============================
 function distance(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 }

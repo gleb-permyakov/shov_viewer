@@ -1,7 +1,3 @@
-// ==========================
-// COMMENTS SYSTEM (FIXED)
-// ==========================
-
 let comments = [] 
 // [x, y, text, id]
 
@@ -12,10 +8,6 @@ let activeCommentInput = null
 let activeCommentPos = null
 let commentTooltip = null
 
-
-// ==========================
-// CREATE COMMENT
-// ==========================
 function createComment(e) {
     const coords = getCanvasCoords(e)
     const x = coords.x
@@ -33,22 +25,16 @@ function createComment(e) {
     })
 }
 
-
-// ==========================
-// DRAW COMMENTS
-// ==========================
 function drawAllComments() {
     comments.forEach((c, index) => {
         const x = c[0]
         const y = c[1]
 
-        // круг
         ctx.beginPath()
         ctx.arc(x, y, COMMENT_RADIUS, 0, Math.PI * 2)
         ctx.fillStyle = "orange"
         ctx.fill()
 
-        // номер
         ctx.font = "12px Arial"
         ctx.textAlign = "left"
         ctx.textBaseline = "middle"
@@ -62,8 +48,6 @@ function drawAllComments() {
     })
 }
 
-
-// ==========================
 // INPUT POSITION (FIXED SAFE)
 // ==========================
 function updateCommentInputPosition() {
@@ -78,7 +62,6 @@ function updateCommentInputPosition() {
     const w = activeCommentInput.offsetWidth || 120
     const h = activeCommentInput.offsetHeight || 24
 
-    // только canvas bounds
     const minLeft = containerRect.left
     const maxLeft = containerRect.right - w
 
@@ -91,9 +74,7 @@ function updateCommentInputPosition() {
     activeCommentInput.style.left = left + "px"
     activeCommentInput.style.top = top + "px"
 }
-// ==========================
-// INPUT UI (FIXED)
-// ==========================
+
 function showCommentInput(x, y, initialText, onSave) {
 
     if (activeCommentInput) {
@@ -152,10 +133,6 @@ function showCommentInput(x, y, initialText, onSave) {
     })
 }
 
-
-// ==========================
-// TOOLTIP (FIXED)
-// ==========================
 function showTooltip(text, x, y) {
     if (!commentTooltip) {
         commentTooltip = document.createElement("div")
@@ -179,10 +156,6 @@ function hideTooltip() {
     }
 }
 
-
-// ==========================
-// HOVER
-// ==========================
 function findPointInComments(e) {
     const coords = getCanvasCoords(e)
     const x = coords.x
@@ -200,7 +173,6 @@ function findPointInComments(e) {
 
             mouse_over_element = true
 
-            // 🔥 важно: совместимость с твоим delete system
             element_to_add = ["comment", [], c[3]]
 
             comments_without_hovered_element =
@@ -214,10 +186,6 @@ function findPointInComments(e) {
     }
 }
 
-
-// ==========================
-// EDIT COMMENT
-// ==========================
 function editComment(e) {
     const coords = getCanvasCoords(e)
     const x = coords.x
@@ -249,10 +217,6 @@ function editComment(e) {
     return false
 }
 
-
-// ==========================
-// LIVE UPDATE INPUT POSITION
-// ==========================
 window.addEventListener("mousemove", () => {
     if (activeCommentInput) {
         updateCommentInputPosition()

@@ -1,9 +1,6 @@
 let lines = []
 let actual_line_data = [] // [цвет, толщина, x1, y1, x2, y2]
 
-
-
-// старт отрисовки линии
 function drawLine(e) {
     const coords = getCanvasCoords(e);
     const startX = coords.x;
@@ -27,26 +24,6 @@ function drawAllLines() {
         ctx.stroke()
     })
 }
-// рисование линии
-// function drawingLine(e) {
-//     if (!isDrawing) {
-//         return
-//     }
-
-//     const coords = getCanvasCoords(e);
-//     const startX = coords.x;
-//     const startY = coords.y;
-    
-//     // парамемтры рисования
-//     ctx.strokeStyle = colorPicker.value
-//     ctx.lineWidth = sizeSlider.value
-//     ctx.lineCap = 'round'
-//     // рисование линии
-//     ctx.beginPath()
-//     ctx.moveTo(startX, startY)
-//     ctx.lineTo(x, y)
-//     ctx.stroke()
-// }
 
 function drawingLine(e) {
     if (!isDrawing) {
@@ -57,7 +34,6 @@ function drawingLine(e) {
     const x = coords.x;
     const y = coords.y;
     
-    // Берем начальные координаты из actual_line_data
     const startX = actual_line_data[2];
     const startY = actual_line_data[3];
     
@@ -104,7 +80,6 @@ function findPointInLine(e) {
         const vertical_line_condition = (x >= (y-b)/k - 7) && (x <= (y-b)/k + 7) && y >= bottom_side && y <= top_side
 
         if (horizontal_line_condotion || vertical_line_condition) {
-            // оп - нашли, подсветили
             ctx.beginPath()
             ctx.moveTo(line[2], line[3])
             ctx.lineTo(line[4], line[5])
@@ -112,9 +87,7 @@ function findPointInLine(e) {
             ctx.lineWidth = line[1]
             ctx.lineCap = 'round'
             ctx.stroke()
-            // сказали, что мышь на элементе
             mouse_over_element = true
-            // передаем массив без этой линии
             lines_without_hovered_element = lines.slice(0, counter).concat(lines.slice(counter+1))
 
             element_to_add = []

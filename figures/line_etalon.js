@@ -13,7 +13,7 @@ function drawLineEt(e) {
 
     ctx.moveTo(startX, startY)
 }
-// отрисовка всех предыдущих линий
+
 function drawAllLinesEt() {
     lines_et.forEach(line => {
         ctx.beginPath()
@@ -50,55 +50,6 @@ function drawingLineEt(e) {
     ctx.lineTo(x, y)
     ctx.stroke()
 }
-// поиск точки на линии
-// function findPointInLineEt(e) {
-//     counter = 0
-//     lines_et.forEach(line => {
-//         const coords = getCanvasCoords(e);
-//         const x = coords.x;
-//         const y = coords.y;
-
-//         k = ((line[3] - line[5]) / (line[2] - line[4]))
-//         b = line[3] - k * line[2]
-
-//         const left_to_right = line[2] < line[4] 
-//         if (left_to_right) {
-//             left_side = line[2]
-//             right_side = line[4]
-//         } else {
-//             left_side = line[4]
-//             right_side = line[2]
-//         }
-
-//         const bottom_to_top = line[3] < line[5] 
-//         if (bottom_to_top) {
-//             bottom_side = line[3]
-//             top_side = line[5]
-//         } else {
-//             bottom_side = line[5]
-//             top_side = line[3]
-//         }
-
-//         const horizontal_line_condotion = (y >= k * x + b - 7) && (y <= k * x + b + 7) && x >= left_side && x <= right_side
-//         const vertical_line_condition = (x >= (y-b)/k - 7) && (x <= (y-b)/k + 7) && y >= bottom_side && y <= top_side
-
-//         if (horizontal_line_condotion || vertical_line_condition) {
-//             // оп - нашли, подсветили
-//             ctx.beginPath()
-//             ctx.moveTo(line[2], line[3])
-//             ctx.lineTo(line[4], line[5])
-//             ctx.strokeStyle = "#fafafa"
-//             ctx.lineWidth = line[1]
-//             ctx.lineCap = 'round'
-//             ctx.stroke()
-//             // сказали, что мышь на элементе
-//             mouse_over_element = true
-//             // передаем массив без этой линии
-//             lines_et_without_hovered_element = lines_et.slice(0, counter).concat(lines_et.slice(counter+1))
-//         }
-//         counter++
-//     })
-// }
 
 function findPointInLineEt(e){
 

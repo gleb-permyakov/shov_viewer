@@ -1,11 +1,9 @@
-// для построения прямоугольников
 let rects = []
 let actual_rect_data = [] // [цвет, толщина, координаты прямоугольника...]
 
 // старт отрисовки прямоугольника
 function drawRect(e) {
-    // startX = e.offsetX / zoomLevel
-    // startY = e.offsetY / zoomLevel
+
     const coords = getCanvasCoords(e);
 
     actual_rect_data = []
@@ -35,9 +33,6 @@ function drawingRect(e) {
     const x0 = actual_rect_data[2]
     const y0 = actual_rect_data[3]
 
-    // параметры рисования
-    // ТУТ НЕЛЬЗЯ ИСПОЛЬЗОВАТЬ ФУНКЦИЮ   drawAnyRect   ПОЧЕМУ-ТО ОНО НЕ УСПЕВАЕТ ПЕРЕРИСОВЫВАТЬ ПРЯМОУГОЛЬНИК
-    // ЕСЛИ ЗАПИХНУТЬ ЭТУ ЛОГИКУ В ФУНКЦИЮ И ВЫЗЫВАТЬ ФУНКЦИЮ
     ctx.strokeStyle = actual_rect_data[0]
     ctx.lineWidth = actual_rect_data[1]
     ctx.lineCap = 'round'

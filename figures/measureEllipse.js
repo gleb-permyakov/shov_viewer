@@ -8,7 +8,7 @@ function drawMeasureEllipse(e) {
     const startY = coords.y
 
     actual_measureEllipse_data = []
-    actual_measureEllipse_data.push("yellow", 1) // цвет и толщина
+    actual_measureEllipse_data.push("yellow", 1)
     actual_measureEllipse_data.push(startX, startY)
 }
 
@@ -92,7 +92,6 @@ function drawEllipseDimensions(x1, y1, x2, y2) {
     ctx.restore()
 }
 
-// поиск точки на эллипсе для hover/удаления
 function findPointInMeasureEllipse(e) {
     const coords = getCanvasCoords(e)
     const x = coords.x
@@ -107,7 +106,6 @@ function findPointInMeasureEllipse(e) {
         const cx = (x1 + x2)/2
         const cy = (y1 + y2)/2
 
-        // проверка попадания по эллипсу (на линии)
         const value = ((x - cx)*(x - cx))/(rx*rx) + ((y - cy)*(y - cy))/(ry*ry)
         if(value >= 0.9 && value <= 1.1) {
             ctx.beginPath()
@@ -121,8 +119,6 @@ function findPointInMeasureEllipse(e) {
             measureEllipses_without_hovered_element =
                 measureEllipses.slice(0, counter)
                 .concat(measureEllipses.slice(counter+1))
-
-            // для добавления дефекта
             element_to_add = ["ellipse", [Math.abs(rx*2) * mmToPx_ratio, Math.abs(ry*2) * mmToPx_ratio], el[6]]
         }
 
@@ -130,15 +126,8 @@ function findPointInMeasureEllipse(e) {
     })
 }
 
-// ==========================
-// HOVER STATE
-// ==========================
 let hoveredMeasureEllipse = null
 
-
-// ==========================
-// HANDLE DRAW (4 AXIS POINTS)
-// ==========================
 function drawEllipseHandles(x1, y1, x2, y2) {
     const cx = (x1 + x2) / 2
     const cy = (y1 + y2) / 2
@@ -149,10 +138,10 @@ function drawEllipseHandles(x1, y1, x2, y2) {
     const size = 3
 
     const points = [
-        [cx, cy - ry], // top
-        [cx, cy + ry], // bottom
-        [cx - rx, cy], // left
-        [cx + rx, cy]  // right
+        [cx, cy - ry],
+        [cx, cy + ry], 
+        [cx - rx, cy], 
+        [cx + rx, cy]  
     ]
 
     ctx.fillStyle = "white"
@@ -167,10 +156,6 @@ function drawEllipseHandles(x1, y1, x2, y2) {
     })
 }
 
-
-// ==========================
-// FIXED RENDER (WITH HOVER)
-// ==========================
 function drawAllMeasureEllipses() {
     measureEllipses.forEach((el, i) => {
 
@@ -192,17 +177,12 @@ function drawAllMeasureEllipses() {
 
         drawEllipseDimensions(x1, y1, x2, y2)
 
-        // 🔥 SHOW HANDLES ONLY ON HOVER
         if (hoveredMeasureEllipse === i) {
             drawEllipseHandles(x1, y1, x2, y2)
         }
     })
 }
 
-
-// ==========================
-// HOVER HIT TEST (FIX)
-// ==========================
 function findPointInMeasureEllipse(e) {
 
     hoveredMeasureEllipse = null
@@ -263,10 +243,6 @@ function findPointInMeasureEllipse(e) {
     })
 }
 
-
-// ==========================
-// HANDLE HIT TEST (DRAG)
-// ==========================
 function findMeasureEllipseHandle(coords) {
     const radius = 5
 
@@ -299,10 +275,6 @@ function findMeasureEllipseHandle(coords) {
     return null
 }
 
-
-// ==========================
-// BODY HIT TEST (DRAG MOVE)
-// ==========================
 function findMeasureEllipseBody(coords) {
 
     for (let i = 0; i < measureEllipses.length; i++) {
@@ -336,10 +308,6 @@ function findMeasureEllipseBody(coords) {
     return null
 }
 
-
-// ==========================
-// MOVE HANDLE
-// ==========================
 function moveMeasureEllipseHandle(index, handle, x, y) {
     const el = measureEllipses[index]
 
@@ -349,10 +317,6 @@ function moveMeasureEllipseHandle(index, handle, x, y) {
     if (handle === "bottom") el[5] = y
 }
 
-
-// ==========================
-// MOVE BODY
-// ==========================
 function moveMeasureEllipse(index, x, y) {
     const el = measureEllipses[index]
 

@@ -115,8 +115,6 @@ function findPointInRuler(e) {
         )
 
         if (dist < 6) {
-
-            // 🔥 highlight (твоя существующая система)
             ctx.beginPath()
             ctx.moveTo(x1, y1)
             ctx.lineTo(x2, y2)
@@ -145,13 +143,11 @@ function drawRulerDragPoints(x1, y1, x2, y2, color) {
     ctx.strokeStyle = color
     ctx.lineWidth = 1
 
-    // start
     ctx.beginPath()
     ctx.rect(x1 - size / 2, y1 - size / 2, size, size)
     ctx.fill()
     ctx.stroke()
 
-    // end
     ctx.beginPath()
     ctx.rect(x2 - size / 2, y2 - size / 2, size, size)
     ctx.fill()
@@ -188,10 +184,6 @@ function drawLengthText(x1, y1, x2, y2, length) {
 
     ctx.restore()
 }
-
-// ===============================
-// DRAG SUPPORT (надстройка)
-// ===============================
 
 function findRulerHandle(coords) {
     for (let i = 0; i < rulers.length; i++) {
