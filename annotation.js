@@ -244,7 +244,7 @@ function redraw_defects() {
             e.preventDefault()
             if (e.button === 2) { 
                 const popup_delete = document.querySelector(".popup_delete_defect")
-                fixed_element_data = ["", [(element[1][0]).toFixed(2), (element[1][1]).toFixed(2)], element[2]]
+                // fixed_element_data = ["", [(element[1][0]).toFixed(2), (element[1][1]).toFixed(2)], element[2]]
                 popup_delete.classList.add("show")
             }
         })
